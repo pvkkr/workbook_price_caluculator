@@ -195,54 +195,25 @@
     outline-offset:2px;
   }
 
-  /* --- Stepper (tap +/- instead of typing) --- */
-  .stepper{
-    display:flex;
-    align-items:stretch;
-    border:2px solid var(--ink);
-  }
-  .stepper button{
-    width:52px;
-    flex-shrink:0;
-    background:var(--paper);
-    border:none;
-    font-family:'Space Mono', monospace;
-    font-size:26px;
-    line-height:1;
-    cursor:pointer;
-    color:var(--ink);
-  }
-  .stepper button:hover, .stepper button:focus-visible{
-    background:var(--highlight);
-    outline:none;
-  }
-  .stepper button:active{
-    background:var(--ink);
-    color:var(--paper);
-  }
-  .stepper .stepper-value{
-    flex:1;
-    text-align:center;
-    font-family:'Space Mono', monospace;
-    font-size:26px;
-    padding:10px 4px;
-    border-left:2px solid var(--ink);
-    border-right:2px solid var(--ink);
-    background:var(--paper);
-    border-top:none;
-    border-bottom:none;
-    color:var(--ink);
+  .direct-input{
     width:100%;
+    font-family:'Space Mono', monospace;
+    font-size:22px;
+    color:var(--ink);
+    background:transparent;
+    border:none;
+    border-bottom:2px solid var(--ink);
+    padding:10px 4px;
+    outline:none;
     -moz-appearance: textfield;
   }
-  .stepper .stepper-value::-webkit-outer-spin-button,
-  .stepper .stepper-value::-webkit-inner-spin-button{
-    -webkit-appearance:none;
-    margin:0;
-  }
-  .stepper .stepper-value:focus{
-    outline:none;
+  .direct-input:focus{
+    border-bottom-color: var(--margin);
     background:#FFF9E8;
+  }
+  .direct-input::-webkit-outer-spin-button,
+  .direct-input::-webkit-inner-spin-button{
+    opacity:1;
   }
 
   .checkline{
@@ -626,19 +597,11 @@
         <div class="item-grid">
           <div class="field">
             <span class="field-label">Qty (copies)</span>
-            <div class="stepper">
-              <button type="button" data-id="${item.id}" data-key="qty" data-dir="-1" aria-label="Decrease quantity">−</button>
-              <input type="number" class="stepper-value" inputmode="numeric" min="1" value="${item.qty}" data-id="${item.id}" data-key="qty">
-              <button type="button" data-id="${item.id}" data-key="qty" data-dir="1" aria-label="Increase quantity">+</button>
-            </div>
+            <input type="number" class="direct-input" inputmode="numeric" min="1" value="${item.qty}" data-id="${item.id}" data-key="qty">
           </div>
           <div class="field">
             <span class="field-label">Pages per copy</span>
-            <div class="stepper">
-              <button type="button" data-id="${item.id}" data-key="pages" data-dir="-1" aria-label="Decrease pages">−</button>
-              <input type="number" class="stepper-value" inputmode="numeric" min="1" value="${item.pages}" data-id="${item.id}" data-key="pages">
-              <button type="button" data-id="${item.id}" data-key="pages" data-dir="1" aria-label="Increase pages">+</button>
-            </div>
+            <input type="number" class="direct-input" inputmode="numeric" min="1" value="${item.pages}" data-id="${item.id}" data-key="pages">
           </div>
         </div>
         <div class="field">
@@ -683,18 +646,7 @@
         calculate();
       });
     });
-    itemRowsEl.querySelectorAll('.stepper button').forEach(el => {
-      el.addEventListener('click', () => {
-        const item = items.find(i => i.id == el.dataset.id);
-        const key = el.dataset.key;
-        const dir = parseInt(el.dataset.dir);
-        item[key] = Math.max(1, item[key] + dir);
-        const valueEl = itemRowsEl.querySelector(`input.stepper-value[data-id="${el.dataset.id}"][data-key="${key}"]`);
-        if (valueEl) valueEl.value = item[key];
-        calculate();
-      });
-    });
-    itemRowsEl.querySelectorAll('input.stepper-value').forEach(el => {
+    itemRowsEl.querySelectorAll('input.direct-input').forEach(el => {
       el.addEventListener('input', () => {
         const item = items.find(i => i.id == el.dataset.id);
         const val = parseInt(el.value);

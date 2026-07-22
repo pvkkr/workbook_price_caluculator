@@ -459,6 +459,42 @@
     color:var(--ink-soft);
     margin-bottom:2px;
   }
+
+  .customer-block{
+    border:2px solid var(--ink);
+    background:var(--paper);
+    padding:18px 18px 6px;
+    margin-bottom:18px;
+  }
+  .customer-block .row-label{
+    font-family:'Space Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--margin);
+    margin:0 0 14px;
+  }
+  .customer-block input[type="text"],
+  .customer-block input[type="tel"]{
+    width:100%;
+    font-family:'Space Mono', monospace;
+    font-size:18px;
+    color:var(--ink);
+    background:transparent;
+    border:none;
+    border-bottom:2px solid var(--ink);
+    padding:4px 2px 8px;
+    outline:none;
+  }
+  .customer-block input:focus{
+    border-bottom-color: var(--margin);
+  }
+  .field-error{
+    color:var(--margin);
+    font-size:12px;
+    margin-top:6px;
+    display:none;
+  }
 </style>
 </head>
 <body>
@@ -476,6 +512,19 @@
 
   <div class="layout">
     <div class="form-block">
+      <div class="customer-block">
+        <p class="row-label">Your Details</p>
+        <div class="field">
+          <span class="field-label">Full name</span>
+          <input type="text" id="customer-name" placeholder="e.g. Sai Kiran">
+        </div>
+        <div class="field">
+          <span class="field-label">WhatsApp / phone number</span>
+          <input type="tel" id="customer-phone" placeholder="e.g. 9390110070" inputmode="numeric">
+          <span class="field-error" id="customer-error">Please enter your name and a valid 10-digit phone number.</span>
+        </div>
+      </div>
+
       <div id="item-rows"></div>
 
       <button type="button" class="add-row" id="add-row">+ Add another item</button>
@@ -525,6 +574,9 @@
   const SERVICE_FEE = 10;
   const PHONE = "919390110070";
 
+  // Paste the Google Apps Script "Web app" URL here after you deploy it (see setup notes).
+  const SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbw-Z9ChKpup_fc4Rw_0ywIW1Af5Fq5zmhwlWkGko2F1m065w_IqGqezJElS9_MCC00P0A/exec";
+
   const itemRowsEl = document.getElementById('item-rows');
   const addRowBtn = document.getElementById('add-row');
   const summaryLine = document.getElementById('summary-line');
@@ -532,6 +584,14 @@
   const serviceCostEl = document.getElementById('service-cost');
   const grandTotalEl = document.getElementById('grand-total');
   const whatsappCta = document.getElementById('whatsapp-cta');
+  const customerNameEl = document.getElementById('customer-name');
+  const customerPhoneEl = document.getElementById('customer-phone');
+  const customerErrorEl = document.getElementById('customer-error');
+
+  let lastMessage = '';
+  let lastGrandTotal = 0;
+  let lastItemsSummary = '';
+  let lastServiceFee = 0;
 
   let nextId = 1;
   let items = [];
@@ -700,15 +760,75 @@
     serviceCostEl.textContent = `₹${SERVICE_FEE * totalCopies}`;
     grandTotalEl.textContent = `₹${grandTotal}`;
 
+    const name = customerNameEl.value.trim();
+    const phone = customerPhoneEl.value.trim();
+
     const message = `Hi! I'd like to place a print order:
+Name: ${name || '(not entered yet)'}
+Phone: ${phone || '(not entered yet)'}
+
 ${waLines.join('\n')}
 Total service fee: ₹${SERVICE_FEE * totalCopies}
 Estimated total: ₹${grandTotal}
 
 (Sending the PDF of each book in this chat)`;
 
+    lastMessage = message;
+    lastGrandTotal = grandTotal;
+    lastItemsSummary = waLines.join(' | ');
+    lastServiceFee = SERVICE_FEE * totalCopies;
+
     whatsappCta.href = `https://wa.me/${PHONE}?text=${encodeURIComponent(message)}`;
   }
+
+  function isValidPhone(phone) {
+    return /^\d{10}$/.test(phone.replace(/\D/g, '').slice(-10));
+  }
+
+  async function logOrderToSheet(name, phone) {
+    if (!SHEET_WEBHOOK_URL || SHEET_WEBHOOK_URL.indexOf('PASTE_YOUR') === 0) {
+      console.warn('Google Sheet webhook URL not set — skipping sheet log.');
+      return;
+    }
+    try {
+      await fetch(SHEET_WEBHOOK_URL, {
+        method: 'POST',
+        mode: 'no-cors', // Apps Script web apps don't return readable CORS headers; fire-and-forget
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          name: name,
+          phone: phone,
+          orderDetails: lastItemsSummary,
+          serviceFee: lastServiceFee,
+          total: lastGrandTotal,
+          fullMessage: lastMessage,
+          timestamp: new Date().toISOString()
+        })
+      });
+    } catch (err) {
+      console.error('Could not log order to Google Sheet:', err);
+    }
+  }
+
+  whatsappCta.addEventListener('click', function (e) {
+    e.preventDefault();
+    const name = customerNameEl.value.trim();
+    const phone = customerPhoneEl.value.trim();
+
+    if (!name || !isValidPhone(phone)) {
+      customerErrorEl.style.display = 'block';
+      customerNameEl.focus();
+      return;
+    }
+    customerErrorEl.style.display = 'none';
+
+    calculate(); // rebuild message with latest name/phone
+    logOrderToSheet(name, phone);
+    window.open(whatsappCta.href, '_blank', 'noopener');
+  });
+
+  customerNameEl.addEventListener('input', calculate);
+  customerPhoneEl.addEventListener('input', calculate);
 
   addRowBtn.addEventListener('click', addItem);
 

@@ -15,15 +15,13 @@
     --ink:#182420;
     --ink-soft:#5C6B62;
     --rule:#C4D3BE;
-    --accent:#D6472C;      /* toner red — pending / action */
-    --ready:#2E7D4F;       /* ready light green — confirmed / total */
+    --accent:#D6472C;
+    --ready:#2E7D4F;
     --highlight:#FFD84A;
     --card:#FFFFFF;
-    --line-h: 34px;
   }
 
   *{box-sizing:border-box;}
-
   body{
     margin:0;
     background:var(--page-shadow);
@@ -35,274 +33,122 @@
   .sheet{
     max-width:960px;
     margin:0 auto;
-    background:
-      repeating-linear-gradient(
-        var(--paper),
-        var(--paper) 39px,
-        var(--bar) 39px,
-        var(--bar) 78px
-      );
+    background: repeating-linear-gradient(var(--paper), var(--paper) 39px, var(--bar) 39px, var(--bar) 78px);
     position:relative;
     padding: 40px 28px 120px;
   }
-  @media (min-width:640px){
-    .sheet{ padding: 48px 56px 64px; }
-  }
+  @media (min-width:640px){ .sheet{ padding: 48px 56px 64px; } }
 
-  /* tractor-feed sprocket strips on both edges */
   .sprockets{
-    position:absolute;
-    top:0; bottom:0;
-    width:26px;
+    position:absolute; top:0; bottom:0; width:26px;
     background:repeating-linear-gradient(var(--ink) 0 2px, transparent 2px 4px) center/1px 100% no-repeat, var(--paper);
-    border-left:1px dashed var(--rule);
-    border-right:1px dashed var(--rule);
+    border-left:1px dashed var(--rule); border-right:1px dashed var(--rule);
     display:none;
   }
   @media (min-width:640px){ .sprockets{ display:block; } }
   .sprockets.left{ left:0; border-left:none; }
   .sprockets.right{ right:0; border-right:none; }
   .sprockets span{
-    position:absolute;
-    left:50%;
-    transform:translateX(-50%);
-    width:11px; height:11px;
-    border-radius:50%;
+    position:absolute; left:50%; transform:translateX(-50%);
+    width:11px; height:11px; border-radius:50%;
     background:radial-gradient(circle at 35% 35%, #ffffff, #d3d3c6 60%, #b3b3a4 100%);
     box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1);
   }
 
   header{ margin-bottom:6px; }
   .eyebrow{
-    font-family:'Space Mono', monospace;
-    font-size:12px;
-    letter-spacing:0.16em;
-    color:var(--accent);
-    text-transform:uppercase;
-    margin:0 0 8px;
+    font-family:'Space Mono', monospace; font-size:12px;
+    letter-spacing:0.16em; color:var(--accent); text-transform:uppercase; margin:0 0 8px;
   }
   h1{
-    font-family:'Space Mono', monospace;
-    font-weight:700;
-    font-size:clamp(30px, 7vw, 46px);
-    line-height:1.05;
-    margin:0 0 12px;
-    letter-spacing:-0.01em;
+    font-family:'Space Mono', monospace; font-weight:700;
+    font-size:clamp(30px, 7vw, 46px); line-height:1.05; margin:0 0 12px; letter-spacing:-0.01em;
   }
   .tagline{
-    font-size:15px;
-    color:var(--ink-soft);
-    max-width:480px;
-    margin:0;
-    line-height:1.5;
+    font-size:15px; color:var(--ink-soft); max-width:480px; margin:0; line-height:1.5;
   }
 
-  .perf{
-    border:none;
-    border-top:2px dashed #B9C4B2;
-    margin: 28px 0;
-    position:relative;
-  }
+  .perf{ border:none; border-top:2px dashed #B9C4B2; margin: 28px 0; position:relative; }
 
   .card{
-    background:var(--card);
-    border:2px solid var(--ink);
-    border-radius:14px;
-    padding:20px 20px 22px;
-    margin-bottom:18px;
-    box-shadow: 0 3px 0 var(--ink);
+    background:var(--card); border:2px solid var(--ink); border-radius:14px;
+    padding:20px 20px 22px; margin-bottom:18px; box-shadow: 0 3px 0 var(--ink);
   }
   .card-label{
-    font-family:'Space Mono', monospace;
-    font-size:11px;
-    letter-spacing:0.12em;
-    text-transform:uppercase;
-    color:var(--accent);
-    margin:0 0 16px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
+    font-family:'Space Mono', monospace; font-size:11px;
+    letter-spacing:0.12em; text-transform:uppercase; color:var(--accent);
+    margin:0 0 16px; display:flex; align-items:center; justify-content:space-between;
   }
 
   .field{ margin-bottom:18px; }
   .field:last-child{ margin-bottom:0; }
   .field-label{
-    display:block;
-    font-size:13px;
-    font-weight:600;
-    color:var(--ink);
-    margin-bottom:8px;
+    display:block; font-size:14px; font-weight:700; color:var(--ink); margin-bottom:8px;
   }
   .field-hint{
-    font-size:12px;
-    color:var(--ink-soft);
-    font-weight:400;
+    font-size:12px; color:var(--ink-soft); font-weight:400; display:block; margin-top:4px;
+  }
+  .field-hint.important{
+    background:var(--highlight); color:var(--ink); padding:6px 10px; border-radius:6px;
+    font-weight:600; display:inline-block; margin-top:8px;
   }
 
-  input[type="text"],
-  input[type="tel"]{
-    width:100%;
-    font-family:'IBM Plex Sans', sans-serif;
-    font-size:18px;
-    font-weight:500;
-    color:var(--ink);
-    background:var(--paper);
-    border:2px solid var(--rule);
-    border-radius:10px;
-    padding:14px 14px;
-    outline:none;
-    -webkit-appearance:none;
+  input[type="text"], input[type="tel"]{
+    width:100%; font-family:'IBM Plex Sans', sans-serif; font-size:18px; font-weight:500;
+    color:var(--ink); background:var(--paper); border:2px solid var(--rule);
+    border-radius:10px; padding:14px 14px; outline:none; -webkit-appearance:none;
   }
-  input[type="text"]:focus,
-  input[type="tel"]:focus{
-    border-color:var(--ink);
-    background:#fff;
-  }
+  input[type="text"]:focus, input[type="tel"]:focus{ border-color:var(--ink); background:#fff; }
 
-  /* big plain-digit entry — NO spinner arrows, just type the number */
   .num-input{
-    width:100%;
-    font-family:'Space Mono', monospace;
-    font-size:26px;
-    font-weight:700;
-    text-align:center;
-    color:var(--ink);
-    background:var(--paper);
-    border:2px solid var(--rule);
-    border-radius:10px;
-    padding:12px 10px;
-    outline:none;
-    -webkit-appearance:none;
-    -moz-appearance:textfield;
+    width:100%; font-family:'Space Mono', monospace; font-size:26px; font-weight:700;
+    text-align:center; color:var(--ink); background:var(--paper); border:2px solid var(--rule);
+    border-radius:10px; padding:12px 10px; outline:none; -webkit-appearance:none; -moz-appearance:textfield;
   }
-  .num-input::-webkit-outer-spin-button,
-  .num-input::-webkit-inner-spin-button{ display:none; margin:0; }
+  .num-input::-webkit-outer-spin-button, .num-input::-webkit-inner-spin-button{ display:none; margin:0; }
   .num-input:focus{ border-color:var(--ink); background:#fff; }
-
-  .chip-row{
-    display:flex;
-    gap:8px;
-    flex-wrap:wrap;
-    margin-bottom:10px;
-  }
-  .chip{
-    font-family:'Space Mono', monospace;
-    font-size:14px;
-    font-weight:700;
-    padding:9px 14px;
-    border-radius:999px;
-    border:2px solid var(--rule);
-    background:var(--paper);
-    color:var(--ink);
-    cursor:pointer;
-    line-height:1.2;
-  }
-  .chip:hover{ border-color:var(--ink); }
-  .chip.active{
-    background:var(--ink);
-    border-color:var(--ink);
-    color:var(--paper);
-  }
-  .chip.custom-chip{
-    border-style:dashed;
-    color:var(--ink-soft);
-  }
-
-  .toggle-row{ display:flex; gap:8px; flex-wrap:wrap; }
-  .toggle{ flex:1; min-width:100px; position:relative; }
-  .toggle input{ position:absolute; opacity:0; inset:0; cursor:pointer; margin:0; width:100%; height:100%; }
-  .toggle label{
-    display:block;
-    text-align:center;
-    padding:13px 8px;
-    border-radius:10px;
-    border:2px solid var(--rule);
-    font-family:'Space Mono', monospace;
-    font-size:14px;
-    letter-spacing:0.01em;
-    background:var(--paper);
-    transition: background .12s ease, color .12s ease, border-color .12s ease;
-  }
-  .toggle label .toggle-price{
-    display:block;
-    font-size:11px;
-    opacity:0.8;
-    margin-top:2px;
-  }
-  .toggle input:checked + label{
-    background:var(--ink);
-    border-color:var(--ink);
-    color:var(--paper);
-  }
-  .toggle input:focus-visible + label{
-    outline:3px solid var(--highlight);
-    outline-offset:2px;
-  }
 
   .item-card{ position:relative; }
   .remove-row{
-    background:none;
-    border:none;
-    font-family:'Space Mono', monospace;
-    font-size:11px;
-    letter-spacing:0.05em;
-    text-transform:uppercase;
-    color:var(--ink-soft);
-    cursor:pointer;
-    text-decoration:underline;
-    padding:2px;
+    background:none; border:none; font-family:'Space Mono', monospace;
+    font-size:11px; letter-spacing:0.05em; text-transform:uppercase;
+    color:var(--ink-soft); cursor:pointer; text-decoration:underline; padding:2px;
   }
   .remove-row:hover{ color:var(--accent); }
 
   .add-row{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:8px;
-    width:100%;
-    background:none;
-    border:2px dashed var(--ink);
-    border-radius:12px;
-    color:var(--ink);
-    font-family:'Space Mono', monospace;
-    font-weight:700;
-    font-size:14px;
-    letter-spacing:0.02em;
-    padding:15px 18px;
-    cursor:pointer;
-    margin-bottom:8px;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    width:100%; background:none; border:2px dashed var(--ink); border-radius:12px;
+    color:var(--ink); font-family:'Space Mono', monospace; font-weight:700;
+    font-size:14px; letter-spacing:0.02em; padding:15px 18px; cursor:pointer; margin-bottom:8px;
   }
-  .add-row:hover, .add-row:focus-visible{
-    background:var(--highlight);
-    border-style:solid;
-    outline:none;
-  }
+  .add-row:hover, .add-row:focus-visible{ background:var(--highlight); border-style:solid; outline:none; }
 
   .two-col{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
 
   .field-error{
-    color:var(--accent);
-    font-size:12px;
-    margin-top:8px;
-    display:none;
-    font-weight:600;
+    color:var(--accent); font-size:12px; margin-top:8px; display:none; font-weight:600;
+  }
+  .field-error.show{ display:block; }
+
+  .item-cost-preview{
+    background:#f0f4ec; border:2px dashed var(--rule); border-radius:10px;
+    padding:12px 14px; margin-top:14px; font-family:'Space Mono', monospace; font-size:12px;
+  }
+  .item-cost-preview .cost-line{ display:flex; justify-content:space-between; padding:3px 0; }
+  .item-cost-preview .cost-line.total{
+    border-top:1px dashed var(--rule); margin-top:6px; padding-top:6px;
+    font-weight:700; font-size:14px; color:var(--ready);
+  }
+  .item-cost-preview.empty{
+    color:var(--ink-soft); font-style:italic; text-align:center;
   }
 
-  /* --- Receipt --- */
   .receipt{
-    background:var(--ink);
-    color:var(--paper);
-    border-radius:14px;
-    padding:22px 20px 20px;
-    font-family:'Space Mono', monospace;
+    background:var(--ink); color:var(--paper); border-radius:14px;
+    padding:22px 20px 20px; font-family:'Space Mono', monospace;
   }
-  .receipt-title{
-    font-size:13px;
-    letter-spacing:0.14em;
-    text-transform:uppercase;
-    margin:0 0 2px;
-    color:var(--paper);
-  }
+  .receipt-title{ font-size:13px; letter-spacing:0.14em; text-transform:uppercase; margin:0 0 2px; color:var(--paper); }
   .receipt-sub{ font-size:12px; color:#B9C4B2; margin:0 0 16px; }
   .receipt hr{ border:none; border-top:1px dashed #445248; margin:12px 0; }
   .line-item{ display:flex; justify-content:space-between; font-size:13px; padding:4px 0; color:#D8E0D3; }
@@ -314,69 +160,35 @@
     font-size:24px; font-weight:700; margin-top:10px; color:var(--paper);
   }
   .stamp{
-    display:inline-block;
-    border:2px solid var(--ready);
-    color:#8FE0AC;
-    padding:4px 10px;
-    font-size:11px;
-    letter-spacing:0.08em;
-    text-transform:uppercase;
-    border-radius:999px;
-    margin-top:10px;
+    display:inline-block; border:2px solid var(--ready); color:#8FE0AC;
+    padding:4px 10px; font-size:11px; letter-spacing:0.08em; text-transform:uppercase;
+    border-radius:999px; margin-top:10px;
   }
   .cta{
-    display:block;
-    width:100%;
-    text-align:center;
-    margin-top:18px;
-    padding:16px;
-    background:var(--ready);
-    color:#fff;
-    font-family:'Space Mono', monospace;
-    font-weight:700;
-    font-size:15px;
-    letter-spacing:0.03em;
-    text-decoration:none;
-    border-radius:10px;
-    border:none;
+    display:block; width:100%; text-align:center; margin-top:18px; padding:16px;
+    background:var(--ready); color:#fff; font-family:'Space Mono', monospace;
+    font-weight:700; font-size:15px; letter-spacing:0.03em; text-decoration:none;
+    border-radius:10px; border:none;
   }
   .cta:hover, .cta:focus-visible{ background:#256B43; outline:none; }
 
   .rates-note{
-    font-size:12px;
-    color:var(--ink-soft);
-    margin-top:16px;
-    line-height:1.65;
+    font-size:12px; color:var(--ink-soft); margin-top:16px; line-height:1.65;
   }
   .receipt .rates-note{ color:#9AA89C; text-align:center; margin-top:14px; }
 
   footer{
-    margin-top:36px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    flex-wrap:wrap;
-    gap:10px;
-    font-family:'Space Mono', monospace;
-    font-size:12px;
-    color:var(--ink-soft);
+    margin-top:36px; display:flex; justify-content:space-between; align-items:center;
+    flex-wrap:wrap; gap:10px; font-family:'Space Mono', monospace;
+    font-size:12px; color:var(--ink-soft);
   }
   footer a{ color:var(--ink); font-weight:700; text-decoration:none; border-bottom:2px solid var(--accent); }
 
-  /* sticky mobile total bar */
   .sticky-bar{
-    position:fixed;
-    left:0; right:0; bottom:0;
-    background:var(--ink);
-    color:var(--paper);
-    padding:12px 16px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-    font-family:'Space Mono', monospace;
-    box-shadow:0 -6px 20px rgba(0,0,0,0.25);
-    z-index:50;
+    position:fixed; left:0; right:0; bottom:0; background:var(--ink); color:var(--paper);
+    padding:12px 16px; display:flex; align-items:center; justify-content:space-between;
+    gap:12px; font-family:'Space Mono', monospace;
+    box-shadow:0 -6px 20px rgba(0,0,0,0.25); z-index:50;
   }
   .sticky-bar .sb-total{ font-size:20px; font-weight:700; }
   .sticky-bar .sb-label{ font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:#9AA89C; display:block; }
@@ -388,7 +200,33 @@
     .receipt{ position:sticky; top:24px; }
     .sheet{ padding-bottom:64px; }
   }
+
+  .toggle-row{ display:flex; gap:8px; flex-wrap:wrap; }
+  .toggle{ flex:1; min-width:100px; position:relative; }
+  .toggle input{ position:absolute; opacity:0; inset:0; cursor:pointer; margin:0; width:100%; height:100%; }
+  .toggle label{
+    display:block; text-align:center; padding:13px 8px; border-radius:10px;
+    border:2px solid var(--rule); font-family:'Space Mono', monospace;
+    font-size:13px; letter-spacing:0.01em; background:var(--paper);
+    transition: background .12s ease, color .12s ease, border-color .12s ease;
+    line-height:1.4;
+  }
+  .toggle label .toggle-price{ display:block; font-size:11px; opacity:0.8; margin-top:3px; }
+  .toggle input:checked + label{ background:var(--ink); border-color:var(--ink); color:var(--paper); }
+  .toggle input:focus-visible + label{ outline:3px solid var(--highlight); outline-offset:2px; }
+
+  .side-input{
+    width:100%; font-family:'IBM Plex Sans', sans-serif; font-size:18px; font-weight:500;
+    color:var(--ink); background:var(--paper); border:2px solid var(--rule);
+    border-radius:10px; padding:14px 14px; outline:none; -webkit-appearance:none;
+    text-align:center;
+  }
+  .side-input:focus{ border-color:var(--ink); background:#fff; }
+
+  .side-hint{ font-size:12px; color:var(--ink-soft); margin-top:8px; display:block; }
+  .side-hint strong{ color:var(--ready); }
 </style>
+<base target="_blank">
 </head>
 <body>
 
@@ -410,14 +248,26 @@
       <div class="card">
         <p class="card-label">Step 1 · Your details</p>
         <div class="field">
-          <span class="field-label">Your name and Day
-            scholars/Hostel</span>
+          <span class="field-label">Your name</span>
           <input type="text" id="customer-name" placeholder="e.g. Sai Kiran" autocomplete="name">
+        </div>
+        <div class="field">
+          <span class="field-label">Are you a Day Scholar or Hostel student?</span>
+          <div class="toggle-row" role="radiogroup" aria-label="Student type">
+            <div class="toggle">
+              <input type="radio" name="student-type" id="day-scholar" value="Day Scholar">
+              <label for="day-scholar">Day Scholar</label>
+            </div>
+            <div class="toggle">
+              <input type="radio" name="student-type" id="hostel" value="Hostel">
+              <label for="hostel">Hostel</label>
+            </div>
+          </div>
         </div>
         <div class="field">
           <span class="field-label">WhatsApp number</span>
           <input type="tel" id="customer-phone" placeholder="e.g. 9390110070" inputmode="numeric" autocomplete="tel">
-          <span class="field-error" id="customer-error">Please enter your name and a valid 10-digit phone number.</span>
+          <span class="field-error" id="customer-error">Please enter your name, select Day Scholar/Hostel, and a valid 10-digit phone number.</span>
         </div>
       </div>
 
@@ -426,9 +276,17 @@
 
       <button type="button" class="add-row" id="add-row">+ Add another subject</button>
 
+      <div class="card" style="background:var(--highlight); border-color:var(--ink);">
+        <p class="field-label" style="margin:0 0 8px;">📎 Don't forget!</p>
+        <p style="margin:0; font-size:14px; line-height:1.5;">After sending this order on WhatsApp, <strong>send the PDF file of each subject</strong> in the same chat. Without the PDF, we can't print!</p>
+      </div>
+
       <p class="rates-note">
-        Printing ₹1 per paper (1 or 2 side, same rate either way — 2 side just uses fewer papers, so it costs less).
-        Pick one binding: Tape ₹20, Spiral ₹20, or Book Bind ₹50. Plus a ₹10 service fee per copy.
+        <strong>How pricing works:</strong><br>
+        • Printing = ₹1 per <em>physical paper</em> used (not per PDF page)<br>
+        • 2-side printing uses half the papers → costs half as much<br>
+        • Binding: Tape ₹20 · Spiral ₹20 · Book Bind ₹50<br>
+        • Service fee: ₹10 per copy
       </p>
     </div>
 
@@ -463,7 +321,6 @@
 </div>
 
 <script>
-  // sprocket holes down both tractor-feed margins
   ['holes-l','holes-r'].forEach(id => {
     const holes = document.getElementById(id);
     const spacing = 60;
@@ -479,11 +336,8 @@
   const BINDING_RATES = { tape: 20, spiral: 20, book: 50 };
   const SERVICE_FEE = 10;
   const PHONE = "919390110070";
-  const QTY_PRESETS = [1, 2, 3, 5];
-  const PAGE_PRESETS = [10, 20, 50, 100];
 
-  // Paste the Google Apps Script "Web app" URL here after you deploy it (see setup notes).
-  const SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbw-Z9ChKpup_fc4Rw_0ywIW1Af5Fq5zmhwlWkGko2F1m065w_IqGqezJElS9_MCC00P0A/exec";
+  const SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxQ6chBbnT2-9uTFTB-bmJSo3xsZvqndboNAsWlmr7bXb-Y87lGOPcWzmcHzNlXASReGA/exec";
 
   const itemRowsEl = document.getElementById('item-rows');
   const addRowBtn = document.getElementById('add-row');
@@ -508,156 +362,180 @@
   let items = [];
 
   function newItem() {
-    return { id: nextId++, name: '', qty: 1, pages: 20, side: 'single', bindingType: 'spiral' };
+    return { id: nextId++, name: '', pages: '', qty: '', side: 'single', bindingType: 'spiral' };
   }
 
   function addItem() {
-    items.push(newItem());
-    render();
+    const item = newItem();
+    items.push(item);
+    buildItemRow(item, items.length - 1);
+    calculate();
   }
 
   function removeItem(id) {
     if (items.length <= 1) return;
+    const row = document.querySelector(`.item-card[data-item-id="${id}"]`);
+    if (row) row.remove();
     items = items.filter(i => i.id !== id);
-    render();
-  }
-
-  function chipRow(fieldKey, itemId, currentValue, presets) {
-    const chips = presets.map(p => `<button type="button" class="chip ${currentValue === p ? 'active' : ''}" data-id="${itemId}" data-key="${fieldKey}" data-value="${p}">${p}</button>`).join('');
-    return `<div class="chip-row">${chips}<span class="chip custom-chip">or type below</span></div>`;
-  }
-
-  function render() {
-    itemRowsEl.innerHTML = '';
-    items.forEach((item, idx) => {
-      const row = document.createElement('div');
-      row.className = 'card item-card';
-      row.innerHTML = `
-        <p class="card-label">
-          <span>Subject ${idx + 1}</span>
-          ${items.length > 1 ? `<button type="button" class="remove-row" data-id="${item.id}">Remove</button>` : ''}
-        </p>
-        <div class="field">
-          <span class="field-label">Subject name <span class="field-hint">(short form is fine)</span></span>
-          <input type="text" placeholder="e.g. WSN" value="${item.name}" data-id="${item.id}" data-key="name">
-        </div>
-
-        <div class="field">
-          <span class="field-label">Copies</span>
-          ${chipRow('qty', item.id, item.qty, QTY_PRESETS)}
-          <input type="text" inputmode="numeric" pattern="[0-9]*" class="num-input" maxlength="3" value="${item.qty}" data-id="${item.id}" data-key="qty">
-        </div>
-
-        <div class="field">
-          <span class="field-label">Pages per copy</span>
-          ${chipRow('pages', item.id, item.pages, PAGE_PRESETS)}
-          <input type="text" inputmode="numeric" pattern="[0-9]*" class="num-input" maxlength="4" value="${item.pages}" data-id="${item.id}" data-key="pages">
-        </div>
-
-        <div class="field">
-          <span class="field-label">Print sides</span>
-          <div class="toggle-row" role="radiogroup" aria-label="Print side">
-            <div class="toggle">
-              <input type="radio" name="side-${item.id}" id="single-${item.id}" value="single" data-id="${item.id}" ${item.side === 'single' ? 'checked' : ''}>
-              <label for="single-${item.id}">1 Side</label>
-            </div>
-            <div class="toggle">
-              <input type="radio" name="side-${item.id}" id="double-${item.id}" value="double" data-id="${item.id}" ${item.side === 'double' ? 'checked' : ''}>
-              <label for="double-${item.id}">2 Side</label>
-            </div>
-          </div>
-        </div>
-
-        <div class="field">
-          <span class="field-label">Binding</span>
-          <div class="toggle-row" role="radiogroup" aria-label="Binding type">
-            <div class="toggle">
-              <input type="radio" name="bind-${item.id}" id="tape-${item.id}" value="tape" data-id="${item.id}" ${item.bindingType === 'tape' ? 'checked' : ''}>
-              <label for="tape-${item.id}">Tape<span class="toggle-price">₹20</span></label>
-            </div>
-            <div class="toggle">
-              <input type="radio" name="bind-${item.id}" id="spiral-${item.id}" value="spiral" data-id="${item.id}" ${item.bindingType === 'spiral' ? 'checked' : ''}>
-              <label for="spiral-${item.id}">Spiral<span class="toggle-price">₹20</span></label>
-            </div>
-            <div class="toggle">
-              <input type="radio" name="bind-${item.id}" id="book-${item.id}" value="book" data-id="${item.id}" ${item.bindingType === 'book' ? 'checked' : ''}>
-              <label for="book-${item.id}">Book Bind<span class="toggle-price">₹50</span></label>
-            </div>
-          </div>
-        </div>
-      `;
-      itemRowsEl.appendChild(row);
+    document.querySelectorAll('.item-card').forEach((card, idx) => {
+      const label = card.querySelector('.card-label span');
+      if (label) label.textContent = `Subject ${idx + 1}`;
     });
-
-    // subject name
-    itemRowsEl.querySelectorAll('input[data-key="name"]').forEach(el => {
-      el.addEventListener('input', () => {
-        const item = items.find(i => i.id == el.dataset.id);
-        item.name = el.value;
-        calculate();
-      });
-    });
-
-    // plain-digit number fields (qty / pages) — typing only, no spinner
-    itemRowsEl.querySelectorAll('input.num-input').forEach(el => {
-      el.addEventListener('input', () => {
-        const digitsOnly = el.value.replace(/[^0-9]/g, '');
-        if (digitsOnly !== el.value) el.value = digitsOnly;
-        const item = items.find(i => i.id == el.dataset.id);
-        const val = parseInt(digitsOnly, 10);
-        item[el.dataset.key] = isNaN(val) ? '' : val;
-        syncChips(item, el.dataset.key);
-        calculate();
-      });
-      el.addEventListener('blur', () => {
-        const item = items.find(i => i.id == el.dataset.id);
-        if (!item[el.dataset.key] || item[el.dataset.key] < 1) {
-          item[el.dataset.key] = 1;
-          el.value = 1;
-          syncChips(item, el.dataset.key);
-          calculate();
-        }
-      });
-    });
-
-    // quick-pick chips
-    itemRowsEl.querySelectorAll('.chip[data-value]').forEach(el => {
-      el.addEventListener('click', () => {
-        const item = items.find(i => i.id == el.dataset.id);
-        const val = parseInt(el.dataset.value, 10);
-        item[el.dataset.key] = val;
-        const numInput = itemRowsEl.querySelector(`input.num-input[data-id="${el.dataset.id}"][data-key="${el.dataset.key}"]`);
-        if (numInput) numInput.value = val;
-        syncChips(item, el.dataset.key);
-        calculate();
-      });
-    });
-
-    itemRowsEl.querySelectorAll('input[name^="side-"]').forEach(el => {
-      el.addEventListener('change', () => {
-        const item = items.find(i => i.id == el.dataset.id);
-        item.side = el.value;
-        calculate();
-      });
-    });
-    itemRowsEl.querySelectorAll('input[name^="bind-"]').forEach(el => {
-      el.addEventListener('change', () => {
-        const item = items.find(i => i.id == el.dataset.id);
-        item.bindingType = el.value;
-        calculate();
-      });
-    });
-    itemRowsEl.querySelectorAll('.remove-row').forEach(el => {
-      el.addEventListener('click', () => removeItem(parseInt(el.dataset.id)));
-    });
-
     calculate();
   }
 
-  function syncChips(item, key) {
-    itemRowsEl.querySelectorAll(`.chip[data-id="${item.id}"][data-key="${key}"]`).forEach(chipEl => {
-      chipEl.classList.toggle('active', parseInt(chipEl.dataset.value, 10) === item[key]);
-    });
+  function buildItemRow(item, idx) {
+    const row = document.createElement('div');
+    row.className = 'card item-card';
+    row.dataset.itemId = item.id;
+    row.innerHTML = `
+      <p class="card-label">
+        <span>Subject ${idx + 1}</span>
+        ${items.length > 1 ? `<button type="button" class="remove-row" data-id="${item.id}">Remove</button>` : ''}
+      </p>
+      <div class="field">
+        <span class="field-label">Subject name <span class="field-hint">(short form is fine — e.g. WSN, DAA, OS)</span></span>
+        <input type="text" placeholder="e.g. WSN" value="${item.name}" data-id="${item.id}" data-key="name">
+      </div>
+
+      <div class="field">
+        <span class="field-label">How many pages in your PDF? <span class="field-hint">(Open the PDF and check the page count)</span></span>
+        <input type="text" inputmode="numeric" pattern="[0-9]*" class="num-input" maxlength="4" placeholder="Type number of pages" value="${item.pages}" data-id="${item.id}" data-key="pages">
+      </div>
+
+      <div class="field">
+        <span class="field-label">How many copies? <span class="field-hint">(How many printouts you want)</span></span>
+        <input type="text" inputmode="numeric" pattern="[0-9]*" class="num-input" maxlength="3" placeholder="Type number of copies" value="${item.qty}" data-id="${item.id}" data-key="qty">
+      </div>
+
+      <div class="field">
+        <span class="field-label">Print on one side or both sides? <span class="field-hint">(Type 1 or 2)</span></span>
+        <input type="text" inputmode="numeric" pattern="[1-2]" class="side-input" maxlength="1" placeholder="Type 1 for one side, 2 for both sides" value="${item.side === 'double' ? '2' : '1'}" data-id="${item.id}" data-key="side">
+        <span class="side-hint" data-id="${item.id}" data-key="side-hint"></span>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Choose binding type</span>
+        <div class="toggle-row" role="radiogroup" aria-label="Binding type">
+          <div class="toggle">
+            <input type="radio" name="bind-${item.id}" id="tape-${item.id}" value="tape" data-id="${item.id}" ${item.bindingType === 'tape' ? 'checked' : ''}>
+            <label for="tape-${item.id}">📎 Tape<span class="toggle-price">₹20</span></label>
+          </div>
+          <div class="toggle">
+            <input type="radio" name="bind-${item.id}" id="spiral-${item.id}" value="spiral" data-id="${item.id}" ${item.bindingType === 'spiral' ? 'checked' : ''}>
+            <label for="spiral-${item.id}">🌀 Spiral<span class="toggle-price">₹20</span></label>
+          </div>
+          <div class="toggle">
+            <input type="radio" name="bind-${item.id}" id="book-${item.id}" value="book" data-id="${item.id}" ${item.bindingType === 'book' ? 'checked' : ''}>
+            <label for="book-${item.id}">📘 Book Bind<span class="toggle-price">₹50</span></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="item-cost-preview empty" data-id="${item.id}" data-key="cost-preview">
+        Enter pages and copies above to see cost breakdown
+      </div>
+    `;
+    itemRowsEl.appendChild(row);
+  }
+
+  itemRowsEl.addEventListener('input', function(e) {
+    const el = e.target;
+    if (!el.dataset.id || !el.dataset.key) return;
+
+    const item = items.find(i => i.id == el.dataset.id);
+    if (!item) return;
+
+    if (el.dataset.key === 'name') {
+      item.name = el.value;
+    } else if (el.dataset.key === 'pages' || el.dataset.key === 'qty') {
+      const digitsOnly = el.value.replace(/[^0-9]/g, '');
+      if (digitsOnly !== el.value) el.value = digitsOnly;
+      item[el.dataset.key] = digitsOnly;
+    } else if (el.dataset.key === 'side') {
+      const digitsOnly = el.value.replace(/[^0-9]/g, '');
+      if (digitsOnly !== el.value) el.value = digitsOnly;
+      item.side = (digitsOnly === '2') ? 'double' : 'single';
+    }
+
+    updateItemPreview(item);
+    calculate();
+  });
+
+  itemRowsEl.addEventListener('blur', function(e) {
+    const el = e.target;
+    if (!el.dataset.id || !el.dataset.key) return;
+    if (el.dataset.key !== 'pages' && el.dataset.key !== 'qty') return;
+
+    const item = items.find(i => i.id == el.dataset.id);
+    if (!item) return;
+
+    const val = parseInt(item[el.dataset.key], 10);
+    if (!val || val < 1) {
+      item[el.dataset.key] = '';
+      el.value = '';
+      updateItemPreview(item);
+      calculate();
+    }
+  }, true);
+
+  itemRowsEl.addEventListener('change', function(e) {
+    const el = e.target;
+    if (el.name && el.name.startsWith('bind-')) {
+      const item = items.find(i => i.id == el.dataset.id);
+      if (item) {
+        item.bindingType = el.value;
+        updateItemPreview(item);
+        calculate();
+      }
+    }
+  });
+
+  itemRowsEl.addEventListener('click', function(e) {
+    if (e.target.classList.contains('remove-row')) {
+      removeItem(parseInt(e.target.dataset.id));
+    }
+  });
+
+  function updateItemPreview(item) {
+    const pages = parseInt(item.pages) || 0;
+    const qty = parseInt(item.qty) || 0;
+
+    const hintEl = document.querySelector(`.side-hint[data-id="${item.id}"][data-key="side-hint"]`);
+    const previewEl = document.querySelector(`.item-cost-preview[data-id="${item.id}"][data-key="cost-preview"]`);
+
+    if (!hintEl || !previewEl) return;
+
+    if (pages > 0 && qty > 0) {
+      const singlePapers = pages * qty;
+      const doublePapers = Math.ceil(pages / 2) * qty;
+      const papersSaved = singlePapers - doublePapers;
+      const moneySaved = papersSaved * RATE_PER_PAPER;
+      const currentPapers = item.side === 'double' ? doublePapers : singlePapers;
+      const printCost = currentPapers * RATE_PER_PAPER;
+      const bindRate = BINDING_RATES[item.bindingType] || BINDING_RATES.tape;
+      const bindCost = bindRate * qty;
+      const serviceCost = SERVICE_FEE * qty;
+      const itemTotal = printCost + bindCost + serviceCost;
+
+      if (item.side === 'double') {
+        hintEl.innerHTML = `✅ 2-side will use <strong>${doublePapers} papers</strong> — saves ₹${moneySaved} compared to 1-side (${singlePapers} papers)`;
+      } else {
+        hintEl.innerHTML = `1-side will use <strong>${singlePapers} papers</strong>. Type 2 above to save ₹${moneySaved} (uses only ${doublePapers} papers)`;
+      }
+
+      previewEl.classList.remove('empty');
+      previewEl.innerHTML = `
+        <div class="cost-line"><span>Printing (${currentPapers} papers × ₹1)</span><span>₹${printCost}</span></div>
+        <div class="cost-line"><span>${item.bindingType === 'tape' ? 'Tape' : item.bindingType === 'book' ? 'Book' : 'Spiral'} binding × ${qty}</span><span>₹${bindCost}</span></div>
+        <div class="cost-line"><span>Service fee × ${qty}</span><span>₹${serviceCost}</span></div>
+        <div class="cost-line total"><span>Cost for this subject</span><span>₹${itemTotal}</span></div>
+      `;
+    } else {
+      hintEl.innerHTML = '';
+      previewEl.classList.add('empty');
+      previewEl.innerHTML = 'Enter pages and copies above to see cost breakdown';
+    }
   }
 
   function calculate() {
@@ -667,8 +545,10 @@
     let waLines = [];
 
     items.forEach((item, idx) => {
-      const qty = item.qty || 1;
-      const pages = item.pages || 1;
+      const qty = parseInt(item.qty) || 0;
+      const pages = parseInt(item.pages) || 0;
+      if (qty === 0 || pages === 0) return;
+
       const papersPerCopy = item.side === 'double' ? Math.ceil(pages / 2) : pages;
       const totalPapers = papersPerCopy * qty;
       const printCost = totalPapers * RATE_PER_PAPER;
@@ -707,6 +587,7 @@
 
     const message = `Hi! I'd like to place a print order:
 Name: ${name || '(not entered yet)'}
+Type: ${getStudentType() || '(not selected)'}
 Phone: ${phone || '(not entered yet)'}
 
 ${waLines.join('\n')}
@@ -725,8 +606,15 @@ Estimated total: ₹${grandTotal}
     whatsappCtaMobile.href = link;
   }
 
+  // Helper: read student type directly from DOM (more reliable than variable)
+  function getStudentType() {
+    const checked = document.querySelector('input[name="student-type"]:checked');
+    return checked ? checked.value : '';
+  }
+
   function isValidPhone(phone) {
-    return /^\d{10}$/.test(phone.replace(/\D/g, '').slice(-10));
+    const digits = phone.replace(/\D/g, '').slice(-10);
+    return /^\d{10}$/.test(digits);
   }
 
   async function logOrderToSheet(name, phone) {
@@ -737,16 +625,23 @@ Estimated total: ₹${grandTotal}
     try {
       await fetch(SHEET_WEBHOOK_URL, {
         method: 'POST',
-        mode: 'no-cors', // Apps Script web apps don't return readable CORS headers; fire-and-forget
+        mode: 'no-cors',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({
           name: name,
           phone: phone,
+          studentType: getStudentType(),
           orderDetails: lastItemsSummary,
           serviceFee: lastServiceFee,
           total: lastGrandTotal,
+          paidAmount: 0,
           fullMessage: lastMessage,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toLocaleString('en-IN', { 
+            timeZone: 'Asia/Kolkata', 
+            year: 'numeric', month: '2-digit', day: '2-digit',
+            hour: '2-digit', minute: '2-digit', second: '2-digit',
+            hour12: true 
+          })
         })
       });
     } catch (err) {
@@ -758,16 +653,33 @@ Estimated total: ₹${grandTotal}
     e.preventDefault();
     const name = customerNameEl.value.trim();
     const phone = customerPhoneEl.value.trim();
+    const stuType = getStudentType();
 
-    if (!name || !isValidPhone(phone)) {
-      customerErrorEl.style.display = 'block';
-      customerNameEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // Debug logging
+    console.log('Validation check:', { name, phone, stuType, phoneValid: isValidPhone(phone) });
+
+    if (!name) {
+      customerErrorEl.textContent = 'Please enter your name.';
+      customerErrorEl.classList.add('show');
       customerNameEl.focus();
       return;
     }
-    customerErrorEl.style.display = 'none';
+    if (!stuType) {
+      customerErrorEl.textContent = 'Please select Day Scholar or Hostel.';
+      customerErrorEl.classList.add('show');
+      document.querySelector('input[name="student-type"]').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    if (!isValidPhone(phone)) {
+      customerErrorEl.textContent = 'Please enter a valid 10-digit phone number.';
+      customerErrorEl.classList.add('show');
+      customerPhoneEl.focus();
+      return;
+    }
 
-    calculate(); // rebuild message with latest name/phone
+    customerErrorEl.classList.remove('show');
+
+    calculate();
     logOrderToSheet(name, phone);
     window.open(whatsappCta.href, '_blank', 'noopener');
   }
@@ -778,10 +690,22 @@ Estimated total: ₹${grandTotal}
   customerNameEl.addEventListener('input', calculate);
   customerPhoneEl.addEventListener('input', calculate);
 
+  document.querySelectorAll('input[name="student-type"]').forEach(el => {
+    el.addEventListener('change', () => {
+      calculate();
+      // Clear error if they just fixed it
+      if (getStudentType() && customerNameEl.value.trim() && isValidPhone(customerPhoneEl.value.trim())) {
+        customerErrorEl.classList.remove('show');
+      }
+    });
+  });
+
   addRowBtn.addEventListener('click', addItem);
 
-  items.push(newItem());
-  render();
+  const firstItem = newItem();
+  items.push(firstItem);
+  buildItemRow(firstItem, 0);
+  calculate();
 </script>
 
 </body>

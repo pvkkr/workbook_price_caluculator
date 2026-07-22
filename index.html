@@ -229,6 +229,20 @@
     border-left:2px solid var(--ink);
     border-right:2px solid var(--ink);
     background:var(--paper);
+    border-top:none;
+    border-bottom:none;
+    color:var(--ink);
+    width:100%;
+    -moz-appearance: textfield;
+  }
+  .stepper .stepper-value::-webkit-outer-spin-button,
+  .stepper .stepper-value::-webkit-inner-spin-button{
+    -webkit-appearance:none;
+    margin:0;
+  }
+  .stepper .stepper-value:focus{
+    outline:none;
+    background:#FFF9E8;
   }
 
   .checkline{
@@ -554,7 +568,7 @@
             <span class="field-label">Qty (copies)</span>
             <div class="stepper">
               <button type="button" data-id="${item.id}" data-key="qty" data-dir="-1" aria-label="Decrease quantity">−</button>
-              <span class="stepper-value" data-id="${item.id}" data-key="qty">${item.qty}</span>
+              <input type="number" class="stepper-value" inputmode="numeric" min="1" value="${item.qty}" data-id="${item.id}" data-key="qty">
               <button type="button" data-id="${item.id}" data-key="qty" data-dir="1" aria-label="Increase quantity">+</button>
             </div>
           </div>
@@ -562,7 +576,7 @@
             <span class="field-label">Pages per copy</span>
             <div class="stepper">
               <button type="button" data-id="${item.id}" data-key="pages" data-dir="-1" aria-label="Decrease pages">−</button>
-              <span class="stepper-value" data-id="${item.id}" data-key="pages">${item.pages}</span>
+              <input type="number" class="stepper-value" inputmode="numeric" min="1" value="${item.pages}" data-id="${item.id}" data-key="pages">
               <button type="button" data-id="${item.id}" data-key="pages" data-dir="1" aria-label="Increase pages">+</button>
             </div>
           </div>
@@ -615,8 +629,16 @@
         const key = el.dataset.key;
         const dir = parseInt(el.dataset.dir);
         item[key] = Math.max(1, item[key] + dir);
-        const valueEl = itemRowsEl.querySelector(`.stepper-value[data-id="${el.dataset.id}"][data-key="${key}"]`);
-        if (valueEl) valueEl.textContent = item[key];
+        const valueEl = itemRowsEl.querySelector(`input.stepper-value[data-id="${el.dataset.id}"][data-key="${key}"]`);
+        if (valueEl) valueEl.value = item[key];
+        calculate();
+      });
+    });
+    itemRowsEl.querySelectorAll('input.stepper-value').forEach(el => {
+      el.addEventListener('input', () => {
+        const item = items.find(i => i.id == el.dataset.id);
+        const val = parseInt(el.value);
+        item[el.dataset.key] = isNaN(val) ? 1 : Math.max(1, val);
         calculate();
       });
     });

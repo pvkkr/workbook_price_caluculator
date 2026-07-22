@@ -169,14 +169,22 @@
   .toggle label{
     display:block;
     text-align:center;
-    padding:12px 10px;
+    padding:16px 10px;
     border:2px solid var(--ink);
     font-family:'Space Mono', monospace;
-    font-size:13px;
-    letter-spacing:0.03em;
+    font-size:15px;
+    letter-spacing:0.02em;
     text-transform:uppercase;
     background:var(--paper);
     transition: background .15s ease, color .15s ease;
+    line-height:1.5;
+  }
+  .toggle label .toggle-price{
+    display:block;
+    font-size:11px;
+    letter-spacing:0.05em;
+    opacity:0.75;
+    margin-top:2px;
   }
   .toggle input:checked + label{
     background:var(--ink);
@@ -185,6 +193,42 @@
   .toggle input:focus-visible + label{
     outline:3px solid var(--highlight);
     outline-offset:2px;
+  }
+
+  /* --- Stepper (tap +/- instead of typing) --- */
+  .stepper{
+    display:flex;
+    align-items:stretch;
+    border:2px solid var(--ink);
+  }
+  .stepper button{
+    width:52px;
+    flex-shrink:0;
+    background:var(--paper);
+    border:none;
+    font-family:'Space Mono', monospace;
+    font-size:26px;
+    line-height:1;
+    cursor:pointer;
+    color:var(--ink);
+  }
+  .stepper button:hover, .stepper button:focus-visible{
+    background:var(--highlight);
+    outline:none;
+  }
+  .stepper button:active{
+    background:var(--ink);
+    color:var(--paper);
+  }
+  .stepper .stepper-value{
+    flex:1;
+    text-align:center;
+    font-family:'Space Mono', monospace;
+    font-size:26px;
+    padding:10px 4px;
+    border-left:2px solid var(--ink);
+    border-right:2px solid var(--ink);
+    background:var(--paper);
   }
 
   .checkline{
@@ -423,8 +467,8 @@
       <button type="button" class="add-row" id="add-row">+ Add another item</button>
 
       <p class="rates-note">
-        Printing ₹1 per paper (single or double side). Every copy includes book binding at ₹50
-        and a ₹10 service fee.
+        Printing ₹1 per paper (single or double side, same rate for both). Pick one binding per book:
+        Tape ₹20, Spiral ₹20, or Book Bind ₹50 — plus a ₹10 service fee per copy.
         Double-side printing uses half the paper, so it costs less for the same page count.
       </p>
     </div>
@@ -441,6 +485,7 @@
       <span class="stamp">Pay on pickup</span>
 
       <a class="cta" id="whatsapp-cta" href="#" target="_blank" rel="noopener">Order on WhatsApp</a>
+      <p class="rates-note" style="margin-top:12px; text-align:center;">📎 Don't forget to DM the PDF of each book along with this order.</p>
     </div>
   </div>
 
@@ -462,7 +507,7 @@
   }
 
   const RATE_PER_PAPER = 1;
-  const BINDING_RATE = 50;
+  const BINDING_RATES = { tape: 20, spiral: 20, book: 50 };
   const SERVICE_FEE = 10;
   const PHONE = "919390110070";
 
@@ -478,7 +523,7 @@
   let items = [];
 
   function newItem() {
-    return { id: nextId++, name: '', qty: 1, pages: 20, side: 'single' };
+    return { id: nextId++, name: '', qty: 1, pages: 20, side: 'single', bindingType: 'spiral' };
   }
 
   function addItem() {
@@ -507,11 +552,19 @@
         <div class="item-grid">
           <div class="field">
             <span class="field-label">Qty (copies)</span>
-            <input type="number" min="1" value="${item.qty}" data-id="${item.id}" data-key="qty" inputmode="numeric">
+            <div class="stepper">
+              <button type="button" data-id="${item.id}" data-key="qty" data-dir="-1" aria-label="Decrease quantity">−</button>
+              <span class="stepper-value" data-id="${item.id}" data-key="qty">${item.qty}</span>
+              <button type="button" data-id="${item.id}" data-key="qty" data-dir="1" aria-label="Increase quantity">+</button>
+            </div>
           </div>
           <div class="field">
             <span class="field-label">Pages per copy</span>
-            <input type="number" min="1" value="${item.pages}" data-id="${item.id}" data-key="pages" inputmode="numeric">
+            <div class="stepper">
+              <button type="button" data-id="${item.id}" data-key="pages" data-dir="-1" aria-label="Decrease pages">−</button>
+              <span class="stepper-value" data-id="${item.id}" data-key="pages">${item.pages}</span>
+              <button type="button" data-id="${item.id}" data-key="pages" data-dir="1" aria-label="Increase pages">+</button>
+            </div>
           </div>
         </div>
         <div class="field">
@@ -519,15 +572,31 @@
           <div class="toggle-row" role="radiogroup" aria-label="Print side">
             <div class="toggle">
               <input type="radio" name="side-${item.id}" id="single-${item.id}" value="single" data-id="${item.id}" ${item.side === 'single' ? 'checked' : ''}>
-              <label for="single-${item.id}">1 side</label>
+              <label for="single-${item.id}">1 Side</label>
             </div>
             <div class="toggle">
               <input type="radio" name="side-${item.id}" id="double-${item.id}" value="double" data-id="${item.id}" ${item.side === 'double' ? 'checked' : ''}>
-              <label for="double-${item.id}">2 side</label>
+              <label for="double-${item.id}">2 Side</label>
             </div>
           </div>
         </div>
-        <div class="field-label" style="margin-top:16px;">Book binding <span class="price-hint">(included · ₹50 / copy)</span></div>
+        <div class="field">
+          <span class="field-label">Binding type</span>
+          <div class="toggle-row" role="radiogroup" aria-label="Binding type">
+            <div class="toggle">
+              <input type="radio" name="bind-${item.id}" id="tape-${item.id}" value="tape" data-id="${item.id}" ${item.bindingType === 'tape' ? 'checked' : ''}>
+              <label for="tape-${item.id}">Tape<span class="toggle-price">₹20</span></label>
+            </div>
+            <div class="toggle">
+              <input type="radio" name="bind-${item.id}" id="spiral-${item.id}" value="spiral" data-id="${item.id}" ${item.bindingType === 'spiral' ? 'checked' : ''}>
+              <label for="spiral-${item.id}">Spiral<span class="toggle-price">₹20</span></label>
+            </div>
+            <div class="toggle">
+              <input type="radio" name="bind-${item.id}" id="book-${item.id}" value="book" data-id="${item.id}" ${item.bindingType === 'book' ? 'checked' : ''}>
+              <label for="book-${item.id}">Book Bind<span class="toggle-price">₹50</span></label>
+            </div>
+          </div>
+        </div>
       `;
       itemRowsEl.appendChild(row);
     });
@@ -540,17 +609,28 @@
         calculate();
       });
     });
-    itemRowsEl.querySelectorAll('input[data-key="qty"], input[data-key="pages"]').forEach(el => {
-      el.addEventListener('input', () => {
+    itemRowsEl.querySelectorAll('.stepper button').forEach(el => {
+      el.addEventListener('click', () => {
         const item = items.find(i => i.id == el.dataset.id);
-        item[el.dataset.key] = Math.max(1, parseInt(el.value) || 1);
+        const key = el.dataset.key;
+        const dir = parseInt(el.dataset.dir);
+        item[key] = Math.max(1, item[key] + dir);
+        const valueEl = itemRowsEl.querySelector(`.stepper-value[data-id="${el.dataset.id}"][data-key="${key}"]`);
+        if (valueEl) valueEl.textContent = item[key];
         calculate();
       });
     });
-    itemRowsEl.querySelectorAll('input[type="radio"]').forEach(el => {
+    itemRowsEl.querySelectorAll('input[name^="side-"]').forEach(el => {
       el.addEventListener('change', () => {
         const item = items.find(i => i.id == el.dataset.id);
         item.side = el.value;
+        calculate();
+      });
+    });
+    itemRowsEl.querySelectorAll('input[name^="bind-"]').forEach(el => {
+      el.addEventListener('change', () => {
+        const item = items.find(i => i.id == el.dataset.id);
+        item.bindingType = el.value;
         calculate();
       });
     });
@@ -571,25 +651,27 @@
       const papersPerCopy = item.side === 'double' ? Math.ceil(item.pages / 2) : item.pages;
       const totalPapers = papersPerCopy * item.qty;
       const printCost = totalPapers * RATE_PER_PAPER;
-      const bindCost = BINDING_RATE * item.qty;
+      const bindRate = BINDING_RATES[item.bindingType] || BINDING_RATES.tape;
+      const bindCost = bindRate * item.qty;
       const serviceCost = SERVICE_FEE * item.qty;
       const itemTotal = printCost + bindCost + serviceCost;
       grandTotal += itemTotal;
       totalCopies += item.qty;
 
       const label = item.name && item.name.trim() ? item.name.trim() : `Item ${idx + 1}`;
+      const bindLabel = item.bindingType === 'tape' ? 'Tape binding' : item.bindingType === 'book' ? 'Book binding' : 'Spiral binding';
 
       const block = document.createElement('div');
       block.className = 'receipt-item-block';
       block.innerHTML = `
-        <p class="item-name">${label} · ${item.qty} × ${item.pages}pg · ${item.side === 'double' ? '2 side' : '1 side'} · bound</p>
+        <p class="item-name">${label} · ${item.qty} × ${item.pages}pg · ${item.side === 'double' ? '2 side' : '1 side'} · ${bindLabel.toLowerCase()}</p>
         <div class="line-item"><span>Printing (${totalPapers} papers)</span><span>₹${printCost}</span></div>
-        <div class="line-item"><span>Book binding × ${item.qty}</span><span>₹${bindCost}</span></div>
+        <div class="line-item"><span>${bindLabel} × ${item.qty}</span><span>₹${bindCost}</span></div>
         <div class="line-item"><span>Service fee × ${item.qty}</span><span>₹${serviceCost}</span></div>
       `;
       receiptItemsEl.appendChild(block);
 
-      waLines.push(`${label}: ${item.qty} copy(ies), ${item.pages} pages, ${item.side === 'double' ? '2 side' : '1 side'}, book binding — ₹${itemTotal}`);
+      waLines.push(`${label}: ${item.qty} copy(ies), ${item.pages} pages, ${item.side === 'double' ? '2 side' : '1 side'}, ${bindLabel.toLowerCase()} — ₹${itemTotal}`);
     });
 
     summaryLine.textContent = `${items.length} item${items.length > 1 ? 's' : ''} · ${totalCopies} copy${totalCopies !== 1 ? 'ies' : ''}`;
@@ -599,7 +681,9 @@
     const message = `Hi! I'd like to place a print order:
 ${waLines.join('\n')}
 Total service fee: ₹${SERVICE_FEE * totalCopies}
-Estimated total: ₹${grandTotal}`;
+Estimated total: ₹${grandTotal}
+
+(Sending the PDF of each book in this chat)`;
 
     whatsappCta.href = `https://wa.me/${PHONE}?text=${encodeURIComponent(message)}`;
   }

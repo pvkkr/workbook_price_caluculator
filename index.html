@@ -423,8 +423,8 @@
       <button type="button" class="add-row" id="add-row">+ Add another item</button>
 
       <p class="rates-note">
-        Printing ₹1 per paper (single or double side). Every copy includes book binding at ₹50.
-        A flat ₹10 service fee applies once per order.
+        Printing ₹1 per paper (single or double side). Every copy includes book binding at ₹50
+        and a ₹10 service fee.
         Double-side printing uses half the paper, so it costs less for the same page count.
       </p>
     </div>
@@ -435,7 +435,7 @@
       <hr>
       <div class="receipt-items" id="receipt-items"></div>
       <hr>
-      <div class="line-item"><span>Service fee</span><span id="service-cost">₹10</span></div>
+      <div class="line-item"><span>Total service fee</span><span id="service-cost">₹10</span></div>
       <hr>
       <div class="total-row"><span>Total</span><span id="grand-total">₹30</span></div>
       <span class="stamp">Pay on pickup</span>
@@ -563,7 +563,7 @@
 
   function calculate() {
     let totalCopies = 0;
-    let grandTotal = SERVICE_FEE;
+    let grandTotal = 0;
     receiptItemsEl.innerHTML = '';
     let waLines = [];
 
@@ -572,7 +572,8 @@
       const totalPapers = papersPerCopy * item.qty;
       const printCost = totalPapers * RATE_PER_PAPER;
       const bindCost = BINDING_RATE * item.qty;
-      const itemTotal = printCost + bindCost;
+      const serviceCost = SERVICE_FEE * item.qty;
+      const itemTotal = printCost + bindCost + serviceCost;
       grandTotal += itemTotal;
       totalCopies += item.qty;
 
@@ -584,6 +585,7 @@
         <p class="item-name">${label} · ${item.qty} × ${item.pages}pg · ${item.side === 'double' ? '2 side' : '1 side'} · bound</p>
         <div class="line-item"><span>Printing (${totalPapers} papers)</span><span>₹${printCost}</span></div>
         <div class="line-item"><span>Book binding × ${item.qty}</span><span>₹${bindCost}</span></div>
+        <div class="line-item"><span>Service fee × ${item.qty}</span><span>₹${serviceCost}</span></div>
       `;
       receiptItemsEl.appendChild(block);
 
@@ -591,12 +593,12 @@
     });
 
     summaryLine.textContent = `${items.length} item${items.length > 1 ? 's' : ''} · ${totalCopies} copy${totalCopies !== 1 ? 'ies' : ''}`;
-    serviceCostEl.textContent = `₹${SERVICE_FEE}`;
+    serviceCostEl.textContent = `₹${SERVICE_FEE * totalCopies}`;
     grandTotalEl.textContent = `₹${grandTotal}`;
 
     const message = `Hi! I'd like to place a print order:
 ${waLines.join('\n')}
-Service fee: ₹${SERVICE_FEE}
+Total service fee: ₹${SERVICE_FEE * totalCopies}
 Estimated total: ₹${grandTotal}`;
 
     whatsappCta.href = `https://wa.me/${PHONE}?text=${encodeURIComponent(message)}`;

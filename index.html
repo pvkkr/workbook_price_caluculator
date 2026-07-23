@@ -227,6 +227,7 @@
   .side-hint strong{ color:var(--ready); }
 </style>
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
 
@@ -335,9 +336,14 @@
   const RATE_PER_PAPER = 1;
   const BINDING_RATES = { tape: 20, spiral: 20, book: 50 };
   const SERVICE_FEE = 10;
+
+  // Vendor cost constants (internal only — what you pay the printer)
+  const VENDOR_RATE_PER_PAPER = 0.8;
+  const VENDOR_BINDING_RATES = { tape: 10, spiral: 20, book: 50 };
+
   const PHONE = "919390110070";
 
-  const SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxQ6chBbnT2-9uTFTB-bmJSo3xsZvqndboNAsWlmr7bXb-Y87lGOPcWzmcHzNlXASReGA/exec";
+  const SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbx5aBwkd4eX7-gJpintQm3v0BQPZuewN72ahdzh8sf2-o9H8SDD5RsNd4fjJrd3Se0Ogg/exec";
 
   const itemRowsEl = document.getElementById('item-rows');
   const addRowBtn = document.getElementById('add-row');
@@ -357,6 +363,7 @@
   let lastGrandTotal = 0;
   let lastItemsSummary = '';
   let lastServiceFee = 0;
+  let lastVendorTotal = 0;
 
   let nextId = 1;
   let items = [];
@@ -541,6 +548,7 @@
   function calculate() {
     let totalCopies = 0;
     let grandTotal = 0;
+    let vendorGrandTotal = 0;
     receiptItemsEl.innerHTML = '';
     let waLines = [];
 
@@ -558,6 +566,13 @@
       const itemTotal = printCost + bindCost + serviceCost;
       grandTotal += itemTotal;
       totalCopies += qty;
+
+      // Vendor cost (internal only — what you pay the printer, no service fee)
+      const vendorPrintCost = totalPapers * VENDOR_RATE_PER_PAPER;
+      const vendorBindRate = VENDOR_BINDING_RATES[item.bindingType] || VENDOR_BINDING_RATES.tape;
+      const vendorBindCost = vendorBindRate * qty;
+      const vendorItemTotal = vendorPrintCost + vendorBindCost;
+      vendorGrandTotal += vendorItemTotal;
 
       const label = item.name && item.name.trim() ? item.name.trim() : `Subject ${idx + 1}`;
       const bindLabel = item.bindingType === 'tape' ? 'Tape binding' : item.bindingType === 'book' ? 'Book binding' : 'Spiral binding';
@@ -600,6 +615,7 @@ Estimated total: ₹${grandTotal}
     lastGrandTotal = grandTotal;
     lastItemsSummary = waLines.join(' | ');
     lastServiceFee = SERVICE_FEE * totalCopies;
+    lastVendorTotal = vendorGrandTotal;
 
     const link = `https://wa.me/${PHONE}?text=${encodeURIComponent(message)}`;
     whatsappCta.href = link;
@@ -636,6 +652,7 @@ Estimated total: ₹${grandTotal}
           total: lastGrandTotal,
           paidAmount: 0,
           fullMessage: lastMessage,
+          vendorCost: lastVendorTotal,
           timestamp: new Date().toLocaleString('en-IN', { 
             timeZone: 'Asia/Kolkata', 
             year: 'numeric', month: '2-digit', day: '2-digit',
@@ -649,14 +666,11 @@ Estimated total: ₹${grandTotal}
     }
   }
 
-  function handleOrderClick(e) {
+  async function handleOrderClick(e) {
     e.preventDefault();
     const name = customerNameEl.value.trim();
     const phone = customerPhoneEl.value.trim();
     const stuType = getStudentType();
-
-    // Debug logging
-    console.log('Validation check:', { name, phone, stuType, phoneValid: isValidPhone(phone) });
 
     if (!name) {
       customerErrorEl.textContent = 'Please enter your name.';
@@ -680,7 +694,7 @@ Estimated total: ₹${grandTotal}
     customerErrorEl.classList.remove('show');
 
     calculate();
-    logOrderToSheet(name, phone);
+    await logOrderToSheet(name, phone);
     window.open(whatsappCta.href, '_blank', 'noopener');
   }
 

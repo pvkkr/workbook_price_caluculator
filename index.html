@@ -343,7 +343,7 @@
 
   const PHONE = "919390110070";
 
-  const SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbx5aBwkd4eX7-gJpintQm3v0BQPZuewN72ahdzh8sf2-o9H8SDD5RsNd4fjJrd3Se0Ogg/exec";
+  const SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxQ6chBbnT2-9uTFTB-bmJSo3xsZvqndboNAsWlmr7bXb-Y87lGOPcWzmcHzNlXASReGA/exec";
 
   const itemRowsEl = document.getElementById('item-rows');
   const addRowBtn = document.getElementById('add-row');
@@ -514,8 +514,9 @@
     if (!hintEl || !previewEl) return;
 
     if (pages > 0 && qty > 0) {
+      const adjustedPages = item.side === 'double' ? adjustPagesForDouble(pages) : pages;
       const singlePapers = pages * qty;
-      const doublePapers = Math.ceil(pages / 2) * qty;
+      const doublePapers = (adjustedPages / 2) * qty;
       const papersSaved = singlePapers - doublePapers;
       const moneySaved = papersSaved * RATE_PER_PAPER;
       const currentPapers = item.side === 'double' ? doublePapers : singlePapers;
@@ -526,7 +527,8 @@
       const itemTotal = printCost + bindCost + serviceCost;
 
       if (item.side === 'double') {
-        hintEl.innerHTML = `✅ 2-side will use <strong>${doublePapers} papers</strong> — saves ₹${moneySaved} compared to 1-side (${singlePapers} papers)`;
+        const adjustedText = (pages % 2 === 1) ? ` (${pages} → ${adjustedPages} adjusted)` : '';
+        hintEl.innerHTML = `✅ 2-side will use <strong>${doublePapers} papers</strong>${adjustedText} — saves ₹${moneySaved} compared to 1-side (${singlePapers} papers)`;
       } else {
         hintEl.innerHTML = `1-side will use <strong>${singlePapers} papers</strong>. Type 2 above to save ₹${moneySaved} (uses only ${doublePapers} papers)`;
       }
@@ -557,7 +559,9 @@
       const pages = parseInt(item.pages) || 0;
       if (qty === 0 || pages === 0) return;
 
-      const papersPerCopy = item.side === 'double' ? Math.ceil(pages / 2) : pages;
+      // Adjust pages for 2-side printing (odd pages → next even number)
+      const adjustedPages = item.side === 'double' ? adjustPagesForDouble(pages) : pages;
+      const papersPerCopy = item.side === 'double' ? adjustedPages / 2 : adjustedPages;
       const totalPapers = papersPerCopy * qty;
       const printCost = totalPapers * RATE_PER_PAPER;
       const bindRate = BINDING_RATES[item.bindingType] || BINDING_RATES.tape;
@@ -631,6 +635,15 @@ Estimated total: ₹${grandTotal}
   function isValidPhone(phone) {
     const digits = phone.replace(/\D/g, '').slice(-10);
     return /^\d{10}$/.test(digits);
+  }
+
+  // Helper: adjust page count for 2-side printing
+  // Odd pages cause a blank back side on the last paper, so we round up to even
+  function adjustPagesForDouble(pages) {
+    const p = parseInt(pages) || 0;
+    if (p <= 0) return 0;
+    // If odd, add 1 to make even (last page will have blank back side)
+    return (p % 2 === 1) ? p + 1 : p;
   }
 
   async function logOrderToSheet(name, phone) {

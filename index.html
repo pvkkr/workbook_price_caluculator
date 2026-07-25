@@ -3,736 +3,460 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KLU Print Desk — Order Slip</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>Workbook Print Orders</title>
 <style>
   :root{
-    --paper:#FBFBF3;
-    --bar:#E3EFDD;
-    --page-shadow:#DDE6D6;
-    --ink:#182420;
-    --ink-soft:#5C6B62;
-    --rule:#C4D3BE;
-    --accent:#D6472C;
-    --ready:#2E7D4F;
-    --highlight:#FFD84A;
-    --card:#FFFFFF;
+    --bg:#f6f7fb;
+    --card:#ffffff;
+    --border:#e4e6ee;
+    --border-active:#6366f1;
+    --ink:#1f2230;
+    --ink-soft:#8a8fa3;
+    --code-bg:#e9e6fb;
+    --code-ink:#5b4fd6;
+    --qty1-bg:#fdf6df;
+    --qty1-border:#eddca0;
+    --qty2-bg:#e8ecff;
+    --qty2-border:#c6cffb;
+    --green:#1f9d55;
+    --green-dark:#188544;
+    --danger:#d1453b;
   }
-
   *{box-sizing:border-box;}
   body{
     margin:0;
-    background:var(--page-shadow);
+    background:var(--bg);
     color:var(--ink);
-    font-family:'IBM Plex Sans', sans-serif;
-    -webkit-font-smoothing:antialiased;
+    font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    padding-bottom:100px;
   }
-
-  .sheet{
-    max-width:960px;
-    margin:0 auto;
-    background: repeating-linear-gradient(var(--paper), var(--paper) 39px, var(--bar) 39px, var(--bar) 78px);
-    position:relative;
-    padding: 40px 28px 120px;
-  }
-  @media (min-width:640px){ .sheet{ padding: 48px 56px 64px; } }
-
-  .sprockets{
-    position:absolute; top:0; bottom:0; width:26px;
-    background:repeating-linear-gradient(var(--ink) 0 2px, transparent 2px 4px) center/1px 100% no-repeat, var(--paper);
-    border-left:1px dashed var(--rule); border-right:1px dashed var(--rule);
-    display:none;
-  }
-  @media (min-width:640px){ .sprockets{ display:block; } }
-  .sprockets.left{ left:0; border-left:none; }
-  .sprockets.right{ right:0; border-right:none; }
-  .sprockets span{
-    position:absolute; left:50%; transform:translateX(-50%);
-    width:11px; height:11px; border-radius:50%;
-    background:radial-gradient(circle at 35% 35%, #ffffff, #d3d3c6 60%, #b3b3a4 100%);
-    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1);
-  }
-
-  header{ margin-bottom:6px; }
-  .eyebrow{
-    font-family:'Space Mono', monospace; font-size:12px;
-    letter-spacing:0.16em; color:var(--accent); text-transform:uppercase; margin:0 0 8px;
-  }
-  h1{
-    font-family:'Space Mono', monospace; font-weight:700;
-    font-size:clamp(30px, 7vw, 46px); line-height:1.05; margin:0 0 12px; letter-spacing:-0.01em;
-  }
-  .tagline{
-    font-size:15px; color:var(--ink-soft); max-width:480px; margin:0; line-height:1.5;
-  }
-
-  .perf{ border:none; border-top:2px dashed #B9C4B2; margin: 28px 0; position:relative; }
-
-  .card{
-    background:var(--card); border:2px solid var(--ink); border-radius:14px;
-    padding:20px 20px 22px; margin-bottom:18px; box-shadow: 0 3px 0 var(--ink);
-  }
-  .card-label{
-    font-family:'Space Mono', monospace; font-size:11px;
-    letter-spacing:0.12em; text-transform:uppercase; color:var(--accent);
-    margin:0 0 16px; display:flex; align-items:center; justify-content:space-between;
-  }
-
-  .field{ margin-bottom:18px; }
-  .field:last-child{ margin-bottom:0; }
-  .field-label{
-    display:block; font-size:14px; font-weight:700; color:var(--ink); margin-bottom:8px;
-  }
-  .field-hint{
-    font-size:12px; color:var(--ink-soft); font-weight:400; display:block; margin-top:4px;
-  }
-  .field-hint.important{
-    background:var(--highlight); color:var(--ink); padding:6px 10px; border-radius:6px;
-    font-weight:600; display:inline-block; margin-top:8px;
-  }
-
-  input[type="text"], input[type="tel"]{
-    width:100%; font-family:'IBM Plex Sans', sans-serif; font-size:18px; font-weight:500;
-    color:var(--ink); background:var(--paper); border:2px solid var(--rule);
-    border-radius:10px; padding:14px 14px; outline:none; -webkit-appearance:none;
-  }
-  input[type="text"]:focus, input[type="tel"]:focus{ border-color:var(--ink); background:#fff; }
-
-  .num-input{
-    width:100%; font-family:'Space Mono', monospace; font-size:26px; font-weight:700;
-    text-align:center; color:var(--ink); background:var(--paper); border:2px solid var(--rule);
-    border-radius:10px; padding:12px 10px; outline:none; -webkit-appearance:none; -moz-appearance:textfield;
-  }
-  .num-input::-webkit-outer-spin-button, .num-input::-webkit-inner-spin-button{ display:none; margin:0; }
-  .num-input:focus{ border-color:var(--ink); background:#fff; }
-
-  .item-card{ position:relative; }
-  .remove-row{
-    background:none; border:none; font-family:'Space Mono', monospace;
-    font-size:11px; letter-spacing:0.05em; text-transform:uppercase;
-    color:var(--ink-soft); cursor:pointer; text-decoration:underline; padding:2px;
-  }
-  .remove-row:hover{ color:var(--accent); }
-
-  .add-row{
-    display:flex; align-items:center; justify-content:center; gap:8px;
-    width:100%; background:none; border:2px dashed var(--ink); border-radius:12px;
-    color:var(--ink); font-family:'Space Mono', monospace; font-weight:700;
-    font-size:14px; letter-spacing:0.02em; padding:15px 18px; cursor:pointer; margin-bottom:8px;
-  }
-  .add-row:hover, .add-row:focus-visible{ background:var(--highlight); border-style:solid; outline:none; }
-
-  .two-col{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-
-  .field-error{
-    color:var(--accent); font-size:12px; margin-top:8px; display:none; font-weight:600;
-  }
-  .field-error.show{ display:block; }
-
-  .item-cost-preview{
-    background:#f0f4ec; border:2px dashed var(--rule); border-radius:10px;
-    padding:12px 14px; margin-top:14px; font-family:'Space Mono', monospace; font-size:12px;
-  }
-  .item-cost-preview .cost-line{ display:flex; justify-content:space-between; padding:3px 0; }
-  .item-cost-preview .cost-line.total{
-    border-top:1px dashed var(--rule); margin-top:6px; padding-top:6px;
-    font-weight:700; font-size:14px; color:var(--ready);
-  }
-  .item-cost-preview.empty{
-    color:var(--ink-soft); font-style:italic; text-align:center;
-  }
-
-  .receipt{
-    background:var(--ink); color:var(--paper); border-radius:14px;
-    padding:22px 20px 20px; font-family:'Space Mono', monospace;
-  }
-  .receipt-title{ font-size:13px; letter-spacing:0.14em; text-transform:uppercase; margin:0 0 2px; color:var(--paper); }
-  .receipt-sub{ font-size:12px; color:#B9C4B2; margin:0 0 16px; }
-  .receipt hr{ border:none; border-top:1px dashed #445248; margin:12px 0; }
-  .line-item{ display:flex; justify-content:space-between; font-size:13px; padding:4px 0; color:#D8E0D3; }
-  .line-item span:first-child{ color:#9AA89C; }
-  .receipt-item-block{ margin-bottom:8px; }
-  .receipt-item-block .item-name{ font-size:12px; color:var(--highlight); margin-bottom:3px; }
-  .total-row{
-    display:flex; justify-content:space-between; align-items:center;
-    font-size:24px; font-weight:700; margin-top:10px; color:var(--paper);
-  }
-  .stamp{
-    display:inline-block; border:2px solid var(--ready); color:#8FE0AC;
-    padding:4px 10px; font-size:11px; letter-spacing:0.08em; text-transform:uppercase;
-    border-radius:999px; margin-top:10px;
-  }
-  .cta{
-    display:block; width:100%; text-align:center; margin-top:18px; padding:16px;
-    background:var(--ready); color:#fff; font-family:'Space Mono', monospace;
-    font-weight:700; font-size:15px; letter-spacing:0.03em; text-decoration:none;
-    border-radius:10px; border:none;
-  }
-  .cta:hover, .cta:focus-visible{ background:#256B43; outline:none; }
-
-  .rates-note{
-    font-size:12px; color:var(--ink-soft); margin-top:16px; line-height:1.65;
-  }
-  .receipt .rates-note{ color:#9AA89C; text-align:center; margin-top:14px; }
-
-  footer{
-    margin-top:36px; display:flex; justify-content:space-between; align-items:center;
-    flex-wrap:wrap; gap:10px; font-family:'Space Mono', monospace;
-    font-size:12px; color:var(--ink-soft);
-  }
-  footer a{ color:var(--ink); font-weight:700; text-decoration:none; border-bottom:2px solid var(--accent); }
-
-  .sticky-bar{
-    position:fixed; left:0; right:0; bottom:0; background:var(--ink); color:var(--paper);
-    padding:12px 16px; display:flex; align-items:center; justify-content:space-between;
-    gap:12px; font-family:'Space Mono', monospace;
-    box-shadow:0 -6px 20px rgba(0,0,0,0.25); z-index:50;
-  }
-  .sticky-bar .sb-total{ font-size:20px; font-weight:700; }
-  .sticky-bar .sb-label{ font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:#9AA89C; display:block; }
-  .sticky-bar a.cta{ margin-top:0; width:auto; padding:12px 18px; font-size:13px; white-space:nowrap; }
-
-  @media (min-width:900px){
-    .sticky-bar{ display:none; }
-    .layout{ display:grid; grid-template-columns:1.15fr 1fr; gap:32px; align-items:start; }
-    .receipt{ position:sticky; top:24px; }
-    .sheet{ padding-bottom:64px; }
-  }
-
-  .toggle-row{ display:flex; gap:8px; flex-wrap:wrap; }
-  .toggle{ flex:1; min-width:100px; position:relative; }
-  .toggle input{ position:absolute; opacity:0; inset:0; cursor:pointer; margin:0; width:100%; height:100%; }
-  .toggle label{
-    display:block; text-align:center; padding:13px 8px; border-radius:10px;
-    border:2px solid var(--rule); font-family:'Space Mono', monospace;
-    font-size:13px; letter-spacing:0.01em; background:var(--paper);
-    transition: background .12s ease, color .12s ease, border-color .12s ease;
-    line-height:1.4;
-  }
-  .toggle label .toggle-price{ display:block; font-size:11px; opacity:0.8; margin-top:3px; }
-  .toggle input:checked + label{ background:var(--ink); border-color:var(--ink); color:var(--paper); }
-  .toggle input:focus-visible + label{ outline:3px solid var(--highlight); outline-offset:2px; }
-
-  .side-input{
-    width:100%; font-family:'IBM Plex Sans', sans-serif; font-size:18px; font-weight:500;
-    color:var(--ink); background:var(--paper); border:2px solid var(--rule);
-    border-radius:10px; padding:14px 14px; outline:none; -webkit-appearance:none;
+  header{
+    padding:26px 20px 18px;
     text-align:center;
+    background:var(--card);
+    border-bottom:1px solid var(--border);
   }
-  .side-input:focus{ border-color:var(--ink); background:#fff; }
+  header h1{
+    font-size:1.6rem;
+    margin:0 0 4px;
+  }
+  header p{
+    margin:0;
+    color:var(--ink-soft);
+    font-size:0.9rem;
+  }
+  main{
+    max-width:720px;
+    margin:0 auto;
+    padding:20px 14px;
+  }
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:18px;
+    margin-bottom:18px;
+  }
+  .card h2{
+    font-size:1rem;
+    margin:0 0 14px;
+    color:var(--ink);
+  }
+  label{
+    display:block;
+    font-size:0.78rem;
+    color:var(--ink-soft);
+    margin-bottom:4px;
+  }
+  input[type=text], input[type=tel], input[type=number]{
+    width:100%;
+    padding:10px 12px;
+    font-family:inherit;
+    font-size:0.95rem;
+    border:1px solid var(--border);
+    border-radius:8px;
+    background:#fff;
+    color:var(--ink);
+  }
+  .contact-row{display:flex; gap:12px; flex-wrap:wrap;}
+  .contact-row > div{flex:1; min-width:160px;}
+  #searchBox{margin-bottom:16px;}
 
-  .side-hint{ font-size:12px; color:var(--ink-soft); margin-top:8px; display:block; }
-  .side-hint strong{ color:var(--ready); }
+  .course-list{display:flex; flex-direction:column; gap:12px;}
+  .course-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:14px 16px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    transition:border-color .15s;
+  }
+  .course-card.active{border-color:var(--border-active); box-shadow:0 0 0 1px var(--border-active);}
+  .course-info{flex:1; min-width:0;}
+  .course-info h3{
+    font-size:0.95rem;
+    margin:0 0 6px;
+    font-weight:700;
+    line-height:1.25;
+  }
+  .badge{
+    display:inline-block;
+    background:var(--code-bg);
+    color:var(--code-ink);
+    font-size:0.72rem;
+    font-weight:700;
+    padding:3px 8px;
+    border-radius:6px;
+    margin-bottom:5px;
+  }
+  .pages{
+    font-size:0.78rem;
+    color:var(--ink-soft);
+  }
+  .qty-group{display:flex; gap:10px; flex-shrink:0;}
+  .qty-box{text-align:center;}
+  .qty-box label{
+    font-size:0.65rem;
+    text-transform:uppercase;
+    letter-spacing:0.4px;
+    color:var(--ink-soft);
+    margin-bottom:4px;
+  }
+  .qty-box input{
+    width:56px;
+    text-align:center;
+    padding:9px 4px;
+    font-weight:700;
+    font-size:0.95rem;
+    border-radius:8px;
+  }
+  .qty-box.one input{background:var(--qty1-bg); border:1px solid var(--qty1-border);}
+  .qty-box.two input{background:var(--qty2-bg); border:1px solid var(--qty2-border);}
+
+  .other-card{border:1px dashed var(--ink-soft);}
+  .other-card .row{display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;}
+  .other-card .row > div{flex:1; min-width:140px;}
+  .btn-mini{
+    border:none;
+    background:var(--ink);
+    color:#fff;
+    padding:10px 16px;
+    border-radius:8px;
+    font-weight:700;
+    font-size:0.85rem;
+    cursor:pointer;
+    margin-top:10px;
+  }
+
+  table{width:100%; border-collapse:collapse; font-size:0.85rem;}
+  th, td{text-align:left; padding:7px 6px; border-bottom:1px solid var(--border);}
+  th{color:var(--ink-soft); font-weight:600; font-size:0.72rem; text-transform:uppercase;}
+  .empty-cart{color:var(--ink-soft); font-style:italic; font-size:0.88rem; padding:8px 0;}
+  .remove-btn{background:none; border:none; color:var(--danger); font-size:1.1rem; cursor:pointer;}
+  .total-line{
+    display:flex; justify-content:space-between; align-items:center;
+    font-size:1.15rem; font-weight:700;
+    margin-top:12px; padding-top:12px; border-top:1px solid var(--border);
+  }
+
+  .submit-bar{
+    position:sticky; bottom:0;
+    background:var(--card);
+    border-top:1px solid var(--border);
+    padding:14px 16px;
+    max-width:720px;
+    margin:0 auto;
+  }
+  .btn-submit{
+    width:100%;
+    background:var(--green);
+    color:#fff;
+    border:none;
+    padding:15px;
+    border-radius:10px;
+    font-size:1rem;
+    font-weight:700;
+    cursor:pointer;
+  }
+  .btn-submit:hover{background:var(--green-dark);}
+  .note{font-size:0.78rem; color:var(--ink-soft); margin-top:8px; text-align:center;}
+  .rate-note{font-size:0.78rem; color:var(--ink-soft); margin-top:10px;}
 </style>
-<base target="_blank">
-<base target="_blank">
 </head>
 <body>
 
-<div class="sheet">
-  <div class="sprockets left" id="holes-l"></div>
-  <div class="sprockets right" id="holes-r"></div>
+<header>
+  <h1>Workbook Print Orders</h1>
+  <p>Set copies needed for 1-side / 2-side print, then send your order</p>
+</header>
 
-  <header>
-    <p class="eyebrow">KL University · Vaddeswaram</p>
-    <h1>Print Desk<br>Order Slip</h1>
-    <p class="tagline">Fill this in and send it on WhatsApp. Your total is worked out for you as you go — pay when you pick it up.</p>
-  </header>
+<main>
 
-  <hr class="perf">
-
-  <div class="layout">
-    <div class="form-block">
-
-      <div class="card">
-        <p class="card-label">Step 1 · Your details</p>
-        <div class="field">
-          <span class="field-label">Your name</span>
-          <input type="text" id="customer-name" placeholder="e.g. Sai Kiran" autocomplete="name">
-        </div>
-        <div class="field">
-          <span class="field-label">Are you a Day Scholar or Hostel student?</span>
-          <div class="toggle-row" role="radiogroup" aria-label="Student type">
-            <div class="toggle">
-              <input type="radio" name="student-type" id="day-scholar" value="Day Scholar">
-              <label for="day-scholar">Day Scholar</label>
-            </div>
-            <div class="toggle">
-              <input type="radio" name="student-type" id="hostel" value="Hostel">
-              <label for="hostel">Hostel</label>
-            </div>
-          </div>
-        </div>
-        <div class="field">
-          <span class="field-label">WhatsApp number</span>
-          <input type="tel" id="customer-phone" placeholder="e.g. 9390110070" inputmode="numeric" autocomplete="tel">
-          <span class="field-error" id="customer-error">Please enter your name, select Day Scholar/Hostel, and a valid 10-digit phone number.</span>
-        </div>
+  <div class="card">
+    <h2>Your details</h2>
+    <div class="contact-row">
+      <div>
+        <label for="custName">Name</label>
+        <input type="text" id="custName" placeholder="Full name">
       </div>
-
-      <p class="card-label" style="margin: 0 0 10px 4px;">Step 2 · What are we printing</p>
-      <div id="item-rows"></div>
-
-      <button type="button" class="add-row" id="add-row">+ Add another subject</button>
-
-      <div class="card" style="background:var(--highlight); border-color:var(--ink);">
-        <p class="field-label" style="margin:0 0 8px;">📎 Don't forget!</p>
-        <p style="margin:0; font-size:14px; line-height:1.5;">After sending this order on WhatsApp, <strong>send the PDF file of each subject</strong> in the same chat. Without the PDF, we can't print!</p>
+      <div>
+        <label for="custContact">Contact number</label>
+        <input type="tel" id="custContact" placeholder="10-digit number">
       </div>
-
-      <p class="rates-note">
-        <strong>How pricing works:</strong><br>
-        • Printing = ₹1 per <em>physical paper</em> used (not per PDF page)<br>
-        • 2-side printing uses half the papers → costs half as much<br>
-        • Binding: Tape ₹20 · Spiral ₹20 · Book Bind ₹50<br>
-        • Service fee: ₹10 per copy
-      </p>
-    </div>
-
-    <div class="receipt">
-      <p class="receipt-title">Order Total</p>
-      <p class="receipt-sub" id="summary-line">1 item</p>
-      <hr>
-      <div class="receipt-items" id="receipt-items"></div>
-      <hr>
-      <div class="line-item"><span>Total service fee</span><span id="service-cost">₹10</span></div>
-      <hr>
-      <div class="total-row"><span>Total</span><span id="grand-total">₹30</span></div>
-      <span class="stamp">Pay on pickup</span>
-
-      <a class="cta" id="whatsapp-cta" href="#" target="_blank" rel="noopener">Order on WhatsApp</a>
-      <p class="rates-note">📎 Also send the PDF of each subject in the same chat.</p>
     </div>
   </div>
 
-  <footer>
-    <span>Call / WhatsApp <a href="tel:+919390110070">93901 10070</a></span>
-    <span>Rates valid for KLU students</span>
-  </footer>
-</div>
-
-<div class="sticky-bar">
-  <div>
-    <span class="sb-label" id="sb-count">1 item</span>
-    <span class="sb-total" id="sb-total">₹30</span>
+  <div class="card">
+    <input type="text" id="searchBox" placeholder="Search course name or code...">
+    <div class="course-list" id="courseList"></div>
   </div>
-  <a class="cta" id="whatsapp-cta-mobile" href="#" target="_blank" rel="noopener">Order on WhatsApp</a>
+
+  <div class="card other-card">
+    <h2>Course not listed?</h2>
+    <div class="row">
+      <div>
+        <label for="otherCourse">Course name</label>
+        <input type="text" id="otherCourse" placeholder="Type the exact course / workbook name">
+      </div>
+      <div>
+        <label for="otherPages">Page count</label>
+        <input type="number" id="otherPages" min="1" placeholder="e.g. 90">
+      </div>
+    </div>
+    <div class="row">
+      <div class="qty-box one">
+        <label>1S Qty</label>
+        <input type="number" id="otherQty1" min="0" value="0">
+      </div>
+      <div class="qty-box two">
+        <label>2S Qty</label>
+        <input type="number" id="otherQty2" min="0" value="0">
+      </div>
+    </div>
+    <button class="btn-mini" onclick="addOther()">+ Add to order</button>
+    <p class="note" style="margin-top:8px;">DM us the PDF — once added to the catalogue, others can order it directly.</p>
+  </div>
+
+  <div class="card">
+    <h2>Order summary</h2>
+    <table>
+      <thead><tr><th>Course</th><th>Pages</th><th>Side</th><th>Qty</th><th>Amount</th><th></th></tr></thead>
+      <tbody id="cartBody"><tr><td colspan="6" class="empty-cart">No items yet — set quantities above.</td></tr></tbody>
+    </table>
+    <div class="total-line"><span>Total</span><span id="cartTotal">Rs 0</span></div>
+    <p class="rate-note">Binding: Rs 50/copy &nbsp;&middot;&nbsp; Paper: Rs 1/printed page &nbsp;&middot;&nbsp; Service: Rs 10/copy &nbsp;&middot;&nbsp; 2-side halves the paper count</p>
+  </div>
+
+</main>
+
+<div class="submit-bar">
+  <button class="btn-submit" id="submitBtn" onclick="submitOrder()">Send order on WhatsApp</button>
+  <p class="note">Logs your order to our sheet and opens WhatsApp with the summary to send us.</p>
 </div>
 
 <script>
-  ['holes-l','holes-r'].forEach(id => {
-    const holes = document.getElementById(id);
-    const spacing = 60;
-    const count = Math.ceil(window.innerHeight / spacing) + 6;
-    for (let i = 0; i < count; i++) {
-      const dot = document.createElement('span');
-      dot.style.top = (i * spacing + 24) + 'px';
-      holes.appendChild(dot);
-    }
-  });
+/* ---------- CONFIG ---------- */
+const OWNER_WHATSAPP_NUMBER = "919390110070";
+const SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzzBX3JwBYn6rRmguGrXuaUqEi8-J_ohg_DLSB7LX6dMcdsrEkUWgj1MNi9fBY_eb5p/exec";
+/* ----------------------------- */
 
-  const RATE_PER_PAPER = 1;
-  const BINDING_RATES = { tape: 20, spiral: 20, book: 50 };
-  const SERVICE_FEE = 10;
+const BINDING_RATE = 50;     // rs per bound copy
+const PAPER_RATE = 1;        // rs per printed page (1-side)
+const SERVICE_FEE_RATE = 10; // rs per copy
 
-  // Vendor cost constants (internal only — what you pay the printer)
-  const VENDOR_RATE_PER_PAPER = 0.8;
-  const VENDOR_BINDING_RATES = { tape: 10, spiral: 20, book: 50 };
+const CATALOGUE = [
+  {code:"24AD3105", title:"Deep Learning Lab Workbook", pages:101},
+  {code:"24CI3201", title:"Adaptive Software Engineering Lab Workbook", pages:176},
+  {code:"24CND3101", title:"Cloud-Native App Dev & Container Orchestration", pages:67},
+  {code:"24DSB3101", title:"Data Analytics and Visualization", pages:78},
+  {code:"24IE03RF", title:"Research Seminar", pages:118},
+  {code:"24AD3107", title:"Data Science", pages:189},
+  {code:"24CAC3101", title:"GPU Programming and Hardware Acceleration for AI and HPC — Practical Workbook", pages:97},
+  {code:"24ACI3507F", title:"Reinforcement Learning", pages:71},
+  {code:"24CI3201", title:"Adaptive Software Engineering", pages:175},
+  {code:"24CS2224F", title:"Crypt Analysis & Cyber Defence (Mode: F)", pages:140},
+  {code:"—", title:"Theory of Computation", pages:123},
+  {code:"24GAM3101", title:"Natural Language Processing and Applications", pages:38},
+  {code:"24AVI3102", title:"AI Driven Video Processing", pages:57},
+  {code:"24CS2266F", title:"Fundamentals of Data Engineering", pages:81},
+  {code:"24SDAD03", title:"Machine Learning Operations", pages:92},
+  {code:"24AD3207", title:"Natural Language Processing Lab Workbook", pages:83},
+  {code:"24IN3103HF", title:"Real Time Operating Systems", pages:103},
+  {code:"24AAS3314EF", title:"AI for Autonomous Navigation, Control and Edge Intelligence", pages:68},
+  {code:"24AD3107", title:"Data Science", pages:197},
+  {code:"24CS2257F", title:"Data Engineering for Financial Systems", pages:102},
+  {code:"24GMI3101", title:"Principles of Deep Neural Computation", pages:105},
+  {code:"24CI3201", title:"Adaptive Software Engineering", pages:145},
+  {code:"24GMI3202HF", title:"Engineering Large Language Model Systems", pages:67},
+  {code:"24CS2250F", title:"Human Computer Interaction", pages:70},
+  {code:"24CS3105", title:"Information Assurance & Security", pages:109},
+  {code:"24AAS3414F", title:"Real Time Networks Communication & Security for Autonomous Systems", pages:173},
+  {code:"24SDCS03 A/R", title:"SOA Programming and Microservices", pages:76},
+  {code:"24CS03EF", title:"Visual Programming", pages:70},
+  {code:"24EC2229F", title:"Wireless Sensor Networks", pages:70},
+  {code:"24SC2006", title:"Object Oriented Programming Laboratory", pages:135},
+  {code:"24EC3112", title:"Discrete Time Signal Processing", pages:175},
+];
 
-  const PHONE = "919390110070";
+let otherItems = []; // custom "not listed" entries added via the mini form
 
-  const SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzcnD8AsutPByK818y6-K5v5ydlywA9edjHdeo6xUfN6osK54dI8IVMqDWS8P_rkEo8dQ/exec";
+function sheetsFor(pages, side){
+  return side === 2 ? Math.ceil(pages / 2) : pages;
+}
+function lineCost(pages, side, qty){
+  return (sheetsFor(pages, side) * PAPER_RATE + BINDING_RATE + SERVICE_FEE_RATE) * qty;
+}
 
-  const itemRowsEl = document.getElementById('item-rows');
-  const addRowBtn = document.getElementById('add-row');
-  const summaryLine = document.getElementById('summary-line');
-  const receiptItemsEl = document.getElementById('receipt-items');
-  const serviceCostEl = document.getElementById('service-cost');
-  const grandTotalEl = document.getElementById('grand-total');
-  const whatsappCta = document.getElementById('whatsapp-cta');
-  const whatsappCtaMobile = document.getElementById('whatsapp-cta-mobile');
-  const customerNameEl = document.getElementById('customer-name');
-  const customerPhoneEl = document.getElementById('customer-phone');
-  const customerErrorEl = document.getElementById('customer-error');
-  const sbCount = document.getElementById('sb-count');
-  const sbTotal = document.getElementById('sb-total');
-
-  let lastMessage = '';
-  let lastGrandTotal = 0;
-  let lastItemsSummary = '';
-  let lastServiceFee = 0;
-  let lastVendorTotal = 0;
-
-  let nextId = 1;
-  let items = [];
-
-  function newItem() {
-    return { id: nextId++, name: '', pages: '', qty: '', side: 'single', bindingType: 'spiral' };
-  }
-
-  function addItem() {
-    const item = newItem();
-    items.push(item);
-    buildItemRow(item, items.length - 1);
-    calculate();
-  }
-
-  function removeItem(id) {
-    if (items.length <= 1) return;
-    const row = document.querySelector(`.item-card[data-item-id="${id}"]`);
-    if (row) row.remove();
-    items = items.filter(i => i.id !== id);
-    document.querySelectorAll('.item-card').forEach((card, idx) => {
-      const label = card.querySelector('.card-label span');
-      if (label) label.textContent = `Subject ${idx + 1}`;
-    });
-    calculate();
-  }
-
-  function buildItemRow(item, idx) {
-    const row = document.createElement('div');
-    row.className = 'card item-card';
-    row.dataset.itemId = item.id;
-    row.innerHTML = `
-      <p class="card-label">
-        <span>Subject ${idx + 1}</span>
-        ${items.length > 1 ? `<button type="button" class="remove-row" data-id="${item.id}">Remove</button>` : ''}
-      </p>
-      <div class="field">
-        <span class="field-label">Subject name <span class="field-hint">(short form is fine — e.g. WSN, DAA, OS)</span></span>
-        <input type="text" placeholder="e.g. WSN" value="${item.name}" data-id="${item.id}" data-key="name">
+function renderCatalogue(filter = ""){
+  const list = document.getElementById("courseList");
+  const f = filter.trim().toLowerCase();
+  list.innerHTML = "";
+  CATALOGUE.forEach((c, i) => {
+    if (f && !c.title.toLowerCase().includes(f) && !c.code.toLowerCase().includes(f)) return;
+    const div = document.createElement("div");
+    div.className = "course-card";
+    div.id = `course-${i}`;
+    div.innerHTML = `
+      <div class="course-info">
+        <h3>${c.title}</h3>
+        <span class="badge">${c.code}</span>
+        <div class="pages">${c.pages} pages</div>
       </div>
-
-      <div class="field">
-        <span class="field-label">How many pages in your PDF? <span class="field-hint">(Open the PDF and check the page count)</span></span>
-        <input type="text" inputmode="numeric" pattern="[0-9]*" class="num-input" maxlength="4" placeholder="Type number of pages" value="${item.pages}" data-id="${item.id}" data-key="pages">
-      </div>
-
-      <div class="field">
-        <span class="field-label">How many copies? <span class="field-hint">(How many printouts you want)</span></span>
-        <input type="text" inputmode="numeric" pattern="[0-9]*" class="num-input" maxlength="3" placeholder="Type number of copies" value="${item.qty}" data-id="${item.id}" data-key="qty">
-      </div>
-
-      <div class="field">
-        <span class="field-label">Print on one side or both sides? <span class="field-hint">(Type 1 or 2)</span></span>
-        <input type="text" inputmode="numeric" pattern="[1-2]" class="side-input" maxlength="1" placeholder="Type 1 for one side, 2 for both sides" value="${item.side === 'double' ? '2' : '1'}" data-id="${item.id}" data-key="side">
-        <span class="side-hint" data-id="${item.id}" data-key="side-hint"></span>
-      </div>
-
-      <div class="field">
-        <span class="field-label">Choose binding type</span>
-        <div class="toggle-row" role="radiogroup" aria-label="Binding type">
-          <div class="toggle">
-            <input type="radio" name="bind-${item.id}" id="tape-${item.id}" value="tape" data-id="${item.id}" ${item.bindingType === 'tape' ? 'checked' : ''}>
-            <label for="tape-${item.id}">📎 Tape<span class="toggle-price">₹20</span></label>
-          </div>
-          <div class="toggle">
-            <input type="radio" name="bind-${item.id}" id="spiral-${item.id}" value="spiral" data-id="${item.id}" ${item.bindingType === 'spiral' ? 'checked' : ''}>
-            <label for="spiral-${item.id}">🌀 Spiral<span class="toggle-price">₹20</span></label>
-          </div>
-          <div class="toggle">
-            <input type="radio" name="bind-${item.id}" id="book-${item.id}" value="book" data-id="${item.id}" ${item.bindingType === 'book' ? 'checked' : ''}>
-            <label for="book-${item.id}">📘 Book Bind<span class="toggle-price">₹50</span></label>
-          </div>
+      <div class="qty-group">
+        <div class="qty-box one">
+          <label>1S Qty</label>
+          <input type="number" min="0" value="0" data-idx="${i}" data-side="1" onchange="onQtyChange(this)">
         </div>
-      </div>
-
-      <div class="item-cost-preview empty" data-id="${item.id}" data-key="cost-preview">
-        Enter pages and copies above to see cost breakdown
-      </div>
-    `;
-    itemRowsEl.appendChild(row);
-  }
-
-  itemRowsEl.addEventListener('input', function(e) {
-    const el = e.target;
-    if (!el.dataset.id || !el.dataset.key) return;
-
-    const item = items.find(i => i.id == el.dataset.id);
-    if (!item) return;
-
-    if (el.dataset.key === 'name') {
-      item.name = el.value;
-    } else if (el.dataset.key === 'pages' || el.dataset.key === 'qty') {
-      const digitsOnly = el.value.replace(/[^0-9]/g, '');
-      if (digitsOnly !== el.value) el.value = digitsOnly;
-      item[el.dataset.key] = digitsOnly;
-    } else if (el.dataset.key === 'side') {
-      const digitsOnly = el.value.replace(/[^0-9]/g, '');
-      if (digitsOnly !== el.value) el.value = digitsOnly;
-      item.side = (digitsOnly === '2') ? 'double' : 'single';
-    }
-
-    updateItemPreview(item);
-    calculate();
+        <div class="qty-box two">
+          <label>2S Qty</label>
+          <input type="number" min="0" value="0" data-idx="${i}" data-side="2" onchange="onQtyChange(this)">
+        </div>
+      </div>`;
+    list.appendChild(div);
   });
+}
 
-  itemRowsEl.addEventListener('blur', function(e) {
-    const el = e.target;
-    if (!el.dataset.id || !el.dataset.key) return;
-    if (el.dataset.key !== 'pages' && el.dataset.key !== 'qty') return;
+function onQtyChange(input){
+  const idx = input.dataset.idx;
+  const card = document.getElementById(`course-${idx}`);
+  const q1 = parseInt(document.querySelector(`input[data-idx="${idx}"][data-side="1"]`).value) || 0;
+  const q2 = parseInt(document.querySelector(`input[data-idx="${idx}"][data-side="2"]`).value) || 0;
+  card.classList.toggle("active", (q1 + q2) > 0);
+  renderSummary();
+}
 
-    const item = items.find(i => i.id == el.dataset.id);
-    if (!item) return;
+function addOther(){
+  const title = document.getElementById("otherCourse").value.trim();
+  const pages = parseInt(document.getElementById("otherPages").value) || 0;
+  const q1 = parseInt(document.getElementById("otherQty1").value) || 0;
+  const q2 = parseInt(document.getElementById("otherQty2").value) || 0;
+  if (!title || !pages){
+    alert("Enter the course name and page count.");
+    return;
+  }
+  if (q1 + q2 === 0){
+    alert("Set at least one quantity (1-side or 2-side).");
+    return;
+  }
+  otherItems.push({title, code:"—", pages, q1, q2});
+  document.getElementById("otherCourse").value = "";
+  document.getElementById("otherPages").value = "";
+  document.getElementById("otherQty1").value = 0;
+  document.getElementById("otherQty2").value = 0;
+  renderSummary();
+}
 
-    const val = parseInt(item[el.dataset.key], 10);
-    if (!val || val < 1) {
-      item[el.dataset.key] = '';
-      el.value = '';
-      updateItemPreview(item);
-      calculate();
-    }
-  }, true);
+function removeOther(i){
+  otherItems.splice(i, 1);
+  renderSummary();
+}
 
-  itemRowsEl.addEventListener('change', function(e) {
-    const el = e.target;
-    if (el.name && el.name.startsWith('bind-')) {
-      const item = items.find(i => i.id == el.dataset.id);
-      if (item) {
-        item.bindingType = el.value;
-        updateItemPreview(item);
-        calculate();
-      }
-    }
+function collectCartItems(){
+  const items = [];
+  CATALOGUE.forEach((c, i) => {
+    const q1 = parseInt(document.querySelector(`input[data-idx="${i}"][data-side="1"]`)?.value) || 0;
+    const q2 = parseInt(document.querySelector(`input[data-idx="${i}"][data-side="2"]`)?.value) || 0;
+    if (q1 > 0) items.push({title:c.title, code:c.code, pages:c.pages, side:1, qty:q1, total:lineCost(c.pages,1,q1), notInCatalogue:false, sourceIdx:i});
+    if (q2 > 0) items.push({title:c.title, code:c.code, pages:c.pages, side:2, qty:q2, total:lineCost(c.pages,2,q2), notInCatalogue:false, sourceIdx:i});
   });
-
-  itemRowsEl.addEventListener('click', function(e) {
-    if (e.target.classList.contains('remove-row')) {
-      removeItem(parseInt(e.target.dataset.id));
-    }
+  otherItems.forEach((o, i) => {
+    if (o.q1 > 0) items.push({title:o.title, code:"—", pages:o.pages, side:1, qty:o.q1, total:lineCost(o.pages,1,o.q1), notInCatalogue:true, otherIdx:i});
+    if (o.q2 > 0) items.push({title:o.title, code:"—", pages:o.pages, side:2, qty:o.q2, total:lineCost(o.pages,2,o.q2), notInCatalogue:true, otherIdx:i});
   });
+  return items;
+}
 
-  function updateItemPreview(item) {
-    const pages = parseInt(item.pages) || 0;
-    const qty = parseInt(item.qty) || 0;
+function renderSummary(){
+  const items = collectCartItems();
+  const body = document.getElementById("cartBody");
+  if (items.length === 0){
+    body.innerHTML = `<tr><td colspan="6" class="empty-cart">No items yet — set quantities above.</td></tr>`;
+  } else {
+    body.innerHTML = items.map(it => `
+      <tr>
+        <td>${it.title}${it.notInCatalogue ? " (new)" : ""}</td>
+        <td>${it.pages}</td>
+        <td>${it.side}-side</td>
+        <td>${it.qty}</td>
+        <td>Rs ${it.total}</td>
+        <td>${it.notInCatalogue ? `<button class="remove-btn" onclick="removeOther(${it.otherIdx})">&times;</button>` : ""}</td>
+      </tr>`).join("");
+  }
+  const grandTotal = items.reduce((s, it) => s + it.total, 0);
+  document.getElementById("cartTotal").textContent = `Rs ${grandTotal}`;
+}
 
-    const hintEl = document.querySelector(`.side-hint[data-id="${item.id}"][data-key="side-hint"]`);
-    const previewEl = document.querySelector(`.item-cost-preview[data-id="${item.id}"][data-key="cost-preview"]`);
-
-    if (!hintEl || !previewEl) return;
-
-    if (pages > 0 && qty > 0) {
-      const adjustedPages = item.side === 'double' ? adjustPagesForDouble(pages) : pages;
-      const singlePapers = pages * qty;
-      const doublePapers = (adjustedPages / 2) * qty;
-      const papersSaved = singlePapers - doublePapers;
-      const moneySaved = papersSaved * RATE_PER_PAPER;
-      const currentPapers = item.side === 'double' ? doublePapers : singlePapers;
-      const printCost = currentPapers * RATE_PER_PAPER;
-      const bindRate = BINDING_RATES[item.bindingType] || BINDING_RATES.tape;
-      const bindCost = bindRate * qty;
-      const serviceCost = SERVICE_FEE * qty;
-      const itemTotal = printCost + bindCost + serviceCost;
-
-      if (item.side === 'double') {
-        const adjustedText = (pages % 2 === 1) ? ` (${pages} → ${adjustedPages} adjusted)` : '';
-        hintEl.innerHTML = `✅ 2-side will use <strong>${doublePapers} papers</strong>${adjustedText} — saves ₹${moneySaved} compared to 1-side (${singlePapers} papers)`;
-      } else {
-        hintEl.innerHTML = `1-side will use <strong>${singlePapers} papers</strong>. Type 2 above to save ₹${moneySaved} (uses only ${doublePapers} papers)`;
-      }
-
-      previewEl.classList.remove('empty');
-      previewEl.innerHTML = `
-        <div class="cost-line"><span>Printing (${currentPapers} papers × ₹1)</span><span>₹${printCost}</span></div>
-        <div class="cost-line"><span>${item.bindingType === 'tape' ? 'Tape' : item.bindingType === 'book' ? 'Book' : 'Spiral'} binding × ${qty}</span><span>₹${bindCost}</span></div>
-        <div class="cost-line"><span>Service fee × ${qty}</span><span>₹${serviceCost}</span></div>
-        <div class="cost-line total"><span>Cost for this subject</span><span>₹${itemTotal}</span></div>
-      `;
-    } else {
-      hintEl.innerHTML = '';
-      previewEl.classList.add('empty');
-      previewEl.innerHTML = 'Enter pages and copies above to see cost breakdown';
-    }
+function submitOrder(){
+  const name = document.getElementById("custName").value.trim();
+  const contact = document.getElementById("custContact").value.trim();
+  if (!name || !contact){
+    alert("Please enter your name and contact number.");
+    return;
+  }
+  const items = collectCartItems();
+  if (items.length === 0){
+    alert("Set at least one quantity before sending your order.");
+    return;
   }
 
-  function calculate() {
-    let totalCopies = 0;
-    let grandTotal = 0;
-    let vendorGrandTotal = 0;
-    receiptItemsEl.innerHTML = '';
-    let waLines = [];
+  const orderId = "WB" + Date.now();
+  const grandTotal = items.reduce((s, it) => s + it.total, 0);
 
-    items.forEach((item, idx) => {
-      const qty = parseInt(item.qty) || 0;
-      const pages = parseInt(item.pages) || 0;
-      if (qty === 0 || pages === 0) return;
-
-      // Adjust pages for 2-side printing (odd pages → next even number)
-      const adjustedPages = item.side === 'double' ? adjustPagesForDouble(pages) : pages;
-      const papersPerCopy = item.side === 'double' ? adjustedPages / 2 : adjustedPages;
-      const totalPapers = papersPerCopy * qty;
-      const printCost = totalPapers * RATE_PER_PAPER;
-      const bindRate = BINDING_RATES[item.bindingType] || BINDING_RATES.tape;
-      const bindCost = bindRate * qty;
-      const serviceCost = SERVICE_FEE * qty;
-      const itemTotal = printCost + bindCost + serviceCost;
-      grandTotal += itemTotal;
-      totalCopies += qty;
-
-      // Vendor cost (internal only — what you pay the printer, no service fee)
-      const vendorPrintCost = totalPapers * VENDOR_RATE_PER_PAPER;
-      const vendorBindRate = VENDOR_BINDING_RATES[item.bindingType] || VENDOR_BINDING_RATES.tape;
-      const vendorBindCost = vendorBindRate * qty;
-      const vendorItemTotal = vendorPrintCost + vendorBindCost;
-      vendorGrandTotal += vendorItemTotal;
-
-      const label = item.name && item.name.trim() ? item.name.trim() : `Subject ${idx + 1}`;
-      const bindLabel = item.bindingType === 'tape' ? 'Tape binding' : item.bindingType === 'book' ? 'Book binding' : 'Spiral binding';
-
-      const block = document.createElement('div');
-      block.className = 'receipt-item-block';
-      block.innerHTML = `
-        <p class="item-name">${label} · ${qty} × ${pages}pg · ${item.side === 'double' ? '2 side' : '1 side'} · ${bindLabel.toLowerCase()}</p>
-        <div class="line-item"><span>Printing (${totalPapers} papers)</span><span>₹${printCost}</span></div>
-        <div class="line-item"><span>${bindLabel} × ${qty}</span><span>₹${bindCost}</span></div>
-        <div class="line-item"><span>Service fee × ${qty}</span><span>₹${serviceCost}</span></div>
-      `;
-      receiptItemsEl.appendChild(block);
-
-      waLines.push(`${label}: ${qty} copy(ies), ${pages} pages, ${item.side === 'double' ? '2 side' : '1 side'}, ${bindLabel.toLowerCase()} — ₹${itemTotal}`);
-    });
-
-    const itemCountText = `${items.length} item${items.length > 1 ? 's' : ''} · ${totalCopies} copy${totalCopies !== 1 ? 'ies' : ''}`;
-    summaryLine.textContent = itemCountText;
-    sbCount.textContent = itemCountText;
-    serviceCostEl.textContent = `₹${SERVICE_FEE * totalCopies}`;
-    grandTotalEl.textContent = `₹${grandTotal}`;
-    sbTotal.textContent = `₹${grandTotal}`;
-
-    const name = customerNameEl.value.trim();
-    const phone = customerPhoneEl.value.trim();
-
-    const message = `Hi! I'd like to place a print order:
-Name: ${name || '(not entered yet)'}
-Type: ${getStudentType() || '(not selected)'}
-Phone: ${phone || '(not entered yet)'}
-
-${waLines.join('\n')}
-Total service fee: ₹${SERVICE_FEE * totalCopies}
-Estimated total: ₹${grandTotal}
-
-(Sending the PDF of each subject in this chat)`;
-
-    lastMessage = message;
-    lastGrandTotal = grandTotal;
-    lastItemsSummary = waLines.join(' | ');
-    lastServiceFee = SERVICE_FEE * totalCopies;
-    lastVendorTotal = vendorGrandTotal;
-
-    const link = `https://wa.me/${PHONE}?text=${encodeURIComponent(message)}`;
-    whatsappCta.href = link;
-    whatsappCtaMobile.href = link;
+  if (SHEET_WEBAPP_URL && !SHEET_WEBAPP_URL.startsWith("PASTE_")){
+    fetch(SHEET_WEBAPP_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: {"Content-Type": "text/plain"},
+      body: JSON.stringify({
+        orderId, name, contact,
+        items: items.map(it => ({
+          title:it.title, code:it.code, pages:it.pages, side:String(it.side), qty:it.qty,
+          binding:BINDING_RATE*it.qty,
+          paper:sheetsFor(it.pages, it.side)*PAPER_RATE*it.qty,
+          service:SERVICE_FEE_RATE*it.qty,
+          total:it.total
+        })),
+        grandTotal, timestamp: new Date().toISOString()
+      })
+    }).catch(() => {});
   }
 
-  // Helper: read student type directly from DOM (more reliable than variable)
-  function getStudentType() {
-    const checked = document.querySelector('input[name="student-type"]:checked');
-    return checked ? checked.value : '';
-  }
-
-  function isValidPhone(phone) {
-    const digits = phone.replace(/\D/g, '').slice(-10);
-    return /^\d{10}$/.test(digits);
-  }
-
-  // Helper: adjust page count for 2-side printing
-  // Odd pages cause a blank back side on the last paper, so we round up to even
-  function adjustPagesForDouble(pages) {
-    const p = parseInt(pages) || 0;
-    if (p <= 0) return 0;
-    // If odd, add 1 to make even (last page will have blank back side)
-    return (p % 2 === 1) ? p + 1 : p;
-  }
-
-  async function logOrderToSheet(name, phone) {
-    if (!SHEET_WEBHOOK_URL || SHEET_WEBHOOK_URL.indexOf('PASTE_YOUR') === 0) {
-      console.warn('Google Sheet webhook URL not set — skipping sheet log.');
-      return;
-    }
-    try {
-      await fetch(SHEET_WEBHOOK_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({
-          name: name,
-          phone: phone,
-          studentType: getStudentType(),
-          orderDetails: lastItemsSummary,
-          serviceFee: lastServiceFee,
-          total: lastGrandTotal,
-          paidAmount: 0,
-          fullMessage: lastMessage,
-          vendorCost: lastVendorTotal,
-          timestamp: new Date().toLocaleString('en-IN', { 
-            timeZone: 'Asia/Kolkata', 
-            year: 'numeric', month: '2-digit', day: '2-digit',
-            hour: '2-digit', minute: '2-digit', second: '2-digit',
-            hour12: true 
-          })
-        })
-      });
-    } catch (err) {
-      console.error('Could not log order to Google Sheet:', err);
-    }
-  }
-
-  async function handleOrderClick(e) {
-    e.preventDefault();
-    const name = customerNameEl.value.trim();
-    const phone = customerPhoneEl.value.trim();
-    const stuType = getStudentType();
-
-    if (!name) {
-      customerErrorEl.textContent = 'Please enter your name.';
-      customerErrorEl.classList.add('show');
-      customerNameEl.focus();
-      return;
-    }
-    if (!stuType) {
-      customerErrorEl.textContent = 'Please select Day Scholar or Hostel.';
-      customerErrorEl.classList.add('show');
-      document.querySelector('input[name="student-type"]').scrollIntoView({ behavior: 'smooth', block: 'center' });
-      return;
-    }
-    if (!isValidPhone(phone)) {
-      customerErrorEl.textContent = 'Please enter a valid 10-digit phone number.';
-      customerErrorEl.classList.add('show');
-      customerPhoneEl.focus();
-      return;
-    }
-
-    customerErrorEl.classList.remove('show');
-
-    calculate();
-    await logOrderToSheet(name, phone);
-    window.open(whatsappCta.href, '_blank', 'noopener');
-  }
-
-  whatsappCta.addEventListener('click', handleOrderClick);
-  whatsappCtaMobile.addEventListener('click', handleOrderClick);
-
-  customerNameEl.addEventListener('input', calculate);
-  customerPhoneEl.addEventListener('input', calculate);
-
-  document.querySelectorAll('input[name="student-type"]').forEach(el => {
-    el.addEventListener('change', () => {
-      calculate();
-      // Clear error if they just fixed it
-      if (getStudentType() && customerNameEl.value.trim() && isValidPhone(customerPhoneEl.value.trim())) {
-        customerErrorEl.classList.remove('show');
-      }
-    });
+  let msg = `*New Workbook Order* (${orderId})\nName: ${name}\nContact: ${contact}\n\n`;
+  items.forEach((it, i) => {
+    msg += `${i+1}. ${it.title}${it.code !== "—" ? " ["+it.code+"]" : ""} — ${it.pages}pg, ${it.side}-side, x${it.qty} = Rs ${it.total}\n`;
   });
+  msg += `\n*Total: Rs ${grandTotal}*`;
 
-  addRowBtn.addEventListener('click', addItem);
+  const waUrl = `https://wa.me/${OWNER_WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+  window.open(waUrl, "_blank");
+}
 
-  const firstItem = newItem();
-  items.push(firstItem);
-  buildItemRow(firstItem, 0);
-  calculate();
+document.getElementById("searchBox").addEventListener("input", (e) => renderCatalogue(e.target.value));
+renderCatalogue();
+renderSummary();
 </script>
 
 </body>

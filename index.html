@@ -215,6 +215,42 @@
   .price-legend b{color:var(--ink);}
   footer{text-align:center;color:var(--ink-soft);font-size:12px;margin-top:50px;}
 
+  /* View toggle */
+  .view-toggle{display:flex;gap:10px;margin-bottom:22px;}
+  .view-toggle-btn{
+    flex:1;padding:13px;border:1.5px solid var(--line);border-radius:8px;background:var(--card);
+    cursor:pointer;font-weight:700;font-size:14px;color:var(--ink-soft);text-align:center;
+    font-family:'Inter',sans-serif;
+  }
+  .view-toggle-btn.active{background:var(--ink);border-color:var(--ink);color:#fff;}
+
+  /* Track order */
+  .track-card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px 22px;}
+  .track-status-banner{
+    padding:14px 18px;border-radius:9px;font-weight:700;font-size:15px;margin-bottom:18px;
+    font-family:'Space Mono',monospace;
+  }
+  .track-status-banner.cancelled{background:#FBEAE8;color:var(--stamp-dark);border:1px solid #eec7c1;}
+  .track-status-banner.active{background:#E4F1E9;color:var(--ok);border:1px solid #b7dcc5;}
+  .steps-track{display:flex;align-items:flex-start;justify-content:space-between;margin:18px 0 26px;}
+  .step-node{flex:1;text-align:center;position:relative;}
+  .step-node .dot{
+    width:26px;height:26px;border-radius:50%;background:var(--line);margin:0 auto 8px;
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700;
+    font-family:'Space Mono',monospace;position:relative;z-index:2;
+  }
+  .step-node.done .dot{background:var(--press);}
+  .step-node.current .dot{background:var(--stamp);}
+  .step-node .line{
+    position:absolute;top:13px;left:-50%;width:100%;height:3px;background:var(--line);z-index:1;
+  }
+  .step-node:first-child .line{display:none;}
+  .step-node.done .line, .step-node.current .line{background:var(--press);}
+  .step-node .lbl{font-size:10.5px;color:var(--ink-soft);font-weight:600;line-height:1.3;}
+  .step-node.current .lbl, .step-node.done .lbl{color:var(--ink);}
+  .track-not-found{padding:24px;text-align:center;color:var(--ink-soft);background:var(--card);
+    border:1px dashed var(--line);border-radius:10px;}
+
   @media (max-width:640px){
     .brand h1{font-size:18px;}
     .brand p{font-size:11.5px;}
@@ -245,6 +281,13 @@
     </div>
     <div class="status-pill" id="cartCountPill">0 items in cart</div>
   </header>
+
+  <div class="view-toggle">
+    <button type="button" class="view-toggle-btn active" id="tabOrderBtn" onclick="setView('order')">Place Order</button>
+    <button type="button" class="view-toggle-btn" id="tabTrackBtn" onclick="setView('track')">Track Order</button>
+  </div>
+
+  <div id="orderView">
 
   <div class="price-legend">
     <span>Paper: <b>Rs 1</b> / printed sheet</span>
@@ -379,12 +422,37 @@
     <div class="msg" id="msgBox"></div>
   </section>
 
+  </div> <!-- /orderView -->
+
+  <!-- TRACK ORDER VIEW -->
+  <div id="trackView" style="display:none;">
+    <section>
+      <div class="section-label">Track Order</div>
+      <h2 class="section-title">Check Your Order Status</h2>
+      <p class="section-sub">Enter the Order ID from your WhatsApp confirmation, along with the phone number you ordered with.</p>
+
+      <div class="student-card" style="margin-bottom:16px;">
+        <div class="field">
+          <label>Order ID</label>
+          <input type="text" id="trackOrderId" placeholder="e.g. WPD-0007">
+        </div>
+        <div class="field">
+          <label>Contact Number</label>
+          <input type="tel" id="trackContact" placeholder="The number you ordered with">
+        </div>
+      </div>
+      <button class="submit-btn primary" style="max-width:260px;" onclick="trackOrder()">Track Order</button>
+
+      <div id="trackResult" style="margin-top:22px;"></div>
+    </section>
+  </div>
+
   <footer>Workbook Print Desk - Orders are recorded to Google Sheets and sent via WhatsApp</footer>
 </div>
 
 <script>
 /* ============ CONFIG - EDIT THESE ============ */
-const SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbx6VQYlVs2sf1FVOMFj_zevRoWmE9VfOKv0h6I1IdR1wLQQsgWp5WWyCMk8Hjj9Ucx9hg/exec";
+const SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbySbtjLqG5Yax-VhxacHvun0Qm0a91bSU083QVcVdVffEvE6FJYMNW-uftvyhiQ5Imn/exec";
 const WHATSAPP_NUMBER  = "919390110070"; // country code + number, no + or spaces
 const UPI_ID = "9390110070-4@ibl"; // shown in the advance-payment note
 /* =============================================== */
@@ -609,9 +677,10 @@ function showMsg(text, ok){
   box.className = 'msg show ' + (ok ? 'ok' : 'err');
 }
 
-function buildWhatsAppText(name, contact, reg, type, deliveryDetail, grand, advance){
+function buildWhatsAppText(orderId, name, contact, reg, type, deliveryDetail, grand, advance){
   let lines = [];
   lines.push('*NEW WORKBOOK ORDER*');
+  lines.push('Order ID: ' + orderId);
   lines.push('Name: ' + name);
   lines.push('Contact: ' + contact);
   if(reg) lines.push('Reg No: ' + reg);
@@ -625,7 +694,16 @@ function buildWhatsAppText(name, contact, reg, type, deliveryDetail, grand, adva
   lines.push('');
   lines.push('*TOTAL: Rs ' + grand + '*');
   lines.push('*10% ADVANCE DUE NOW: Rs ' + advance + '*');
+  lines.push('');
+  lines.push('Save your Order ID to track status on the site.');
   return lines.join('\n');
+}
+
+function fetchWithTimeout(url, options, ms){
+  return Promise.race([
+    fetch(url, options),
+    new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), ms))
+  ]);
 }
 
 async function submitOrder(){
@@ -657,45 +735,129 @@ async function submitOrder(){
   });
   const advance = Math.ceil(grand * 0.1);
 
-  // Client-side IST timestamp (for reference only - the sheet always uses its
-  // own server-side IST time as the source of truth, see Code.gs).
-  const now = new Date();
-  const istTimestamp = now.toLocaleString('en-GB', {
-    timeZone: 'Asia/Kolkata', day: '2-digit', month: '2-digit', year: 'numeric',
-    hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
-  }).replace(',', '');
-
   const payload = {
-    timestamp: istTimestamp,
     student: { name, contact, reg, type: stuType, deliveryDetail },
     items, total: grand, advance
   };
 
-  // Open WhatsApp FIRST and synchronously (still inside the click handler,
+  // Open a blank tab FIRST and synchronously (still inside the click handler,
   // before any "await"). Browsers only allow window.open() to bypass the
-  // popup blocker when it runs as a direct result of the user's click; once
-  // we "await" a fetch, the following code no longer counts as part of that
-  // click and the popup gets silently blocked (especially on mobile).
-  const text = buildWhatsAppText(name, contact, reg, stuType, deliveryDetail, grand, advance);
-  const waUrl = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(text);
-  window.open(waUrl, '_blank');
+  // popup blocker when it runs as a direct result of the user's click. We
+  // navigate this tab to the real WhatsApp URL further below, once we know
+  // the server-generated Order ID - setting .location on an already-open
+  // window is allowed even after an await, unlike calling window.open() itself.
+  const waWin = window.open('', '_blank');
 
+  let orderId = null;
   try{
     if(SHEET_WEBAPP_URL && !SHEET_WEBAPP_URL.startsWith('PASTE_')){
-      await fetch(SHEET_WEBAPP_URL, {
+      const res = await fetchWithTimeout(SHEET_WEBAPP_URL, {
         method: 'POST',
-        mode: 'no-cors',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify(payload)
-      });
+      }, 8000);
+      const result = await res.json();
+      if(result && result.orderId) orderId = result.orderId;
+      showMsg('Order ' + (orderId || '') + ' recorded and sent to WhatsApp!', true);
+    } else {
+      showMsg('Opened WhatsApp. (Sheet URL not configured yet, so nothing was saved.)', true);
     }
-    showMsg('Order recorded and sent to WhatsApp!', true);
   }catch(err){
-    showMsg('WhatsApp opened, but could not reach Google Sheets. Your order text is still in WhatsApp - please send it.', false);
-  } finally {
-    btn.disabled = false; btn.textContent = 'Submit Order (Sheet + WhatsApp)';
-    isSubmitting = false;
+    showMsg('Could not confirm with the sheet (it may still have saved) - WhatsApp message prepared without a confirmed Order ID. Please check with the print desk.', false);
   }
+
+  const text = buildWhatsAppText(orderId || 'PENDING', name, contact, reg, stuType, deliveryDetail, grand, advance);
+  const waUrl = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(text);
+  if(waWin) waWin.location = waUrl; else window.open(waUrl, '_blank');
+
+  btn.disabled = false; btn.textContent = 'Submit Order (Sheet + WhatsApp)';
+  isSubmitting = false;
+}
+
+function setView(view){
+  document.getElementById('orderView').style.display = view === 'order' ? '' : 'none';
+  document.getElementById('trackView').style.display = view === 'track' ? '' : 'none';
+  document.getElementById('tabOrderBtn').classList.toggle('active', view === 'order');
+  document.getElementById('tabTrackBtn').classList.toggle('active', view === 'track');
+}
+
+const STATUS_STEPS = ["Received", "Printing", "Ready for Pickup/Delivery", "Delivered"];
+
+async function trackOrder(){
+  const orderId = document.getElementById('trackOrderId').value.trim();
+  const contact = document.getElementById('trackContact').value.trim();
+  const resultBox = document.getElementById('trackResult');
+
+  if(!orderId || !contact){
+    resultBox.innerHTML = '<div class="track-not-found">Please enter both your Order ID and contact number.</div>';
+    return;
+  }
+  if(!SHEET_WEBAPP_URL || SHEET_WEBAPP_URL.startsWith('PASTE_')){
+    resultBox.innerHTML = '<div class="track-not-found">Tracking isn\'t connected yet - the site admin needs to set SHEET_WEBAPP_URL.</div>';
+    return;
+  }
+
+  resultBox.innerHTML = '<div class="track-not-found">Looking up your order...</div>';
+
+  try{
+    const url = SHEET_WEBAPP_URL + '?action=track&orderId=' + encodeURIComponent(orderId) + '&contact=' + encodeURIComponent(contact);
+    const res = await fetchWithTimeout(url, {}, 8000);
+    const data = await res.json();
+
+    if(!data || !data.found){
+      resultBox.innerHTML = '<div class="track-not-found">No matching order found. Double-check your Order ID and the phone number you ordered with.</div>';
+      return;
+    }
+
+    renderTrackResult(data);
+  }catch(err){
+    resultBox.innerHTML = '<div class="track-not-found">Could not reach the tracking service right now. Please try again in a moment.</div>';
+  }
+}
+
+function renderTrackResult(data){
+  const resultBox = document.getElementById('trackResult');
+  const status = data.status || 'Received';
+
+  if(status === 'Cancelled'){
+    resultBox.innerHTML = `
+      <div class="track-card">
+        <div class="track-status-banner cancelled">Order ${data.orderId} - CANCELLED</div>
+        <p style="color:var(--ink-soft);font-size:13.5px;">If you believe this is a mistake, please contact the print desk on WhatsApp with your Order ID.</p>
+      </div>`;
+    return;
+  }
+
+  const currentIndex = STATUS_STEPS.indexOf(status);
+  let stepsHtml = '';
+  STATUS_STEPS.forEach((step, i)=>{
+    let cls = '';
+    if(i < currentIndex) cls = 'done';
+    else if(i === currentIndex) cls = 'current';
+    stepsHtml += `<div class="step-node ${cls}"><div class="line"></div><div class="dot">${i+1}</div><div class="lbl">${step}</div></div>`;
+  });
+
+  let itemsHtml = '';
+  (data.items || []).forEach(item=>{
+    itemsHtml += `<div style="display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:1px dashed var(--line);">
+      <span>${item.course} (${item.sides}, ${item.binding}) x${item.qty}</span>
+      <span class="mono">Rs ${item.lineTotal}</span>
+    </div>`;
+  });
+
+  resultBox.innerHTML = `
+    <div class="track-card">
+      <div class="track-status-banner active">Order ${data.orderId} - ${status}</div>
+      <div class="steps-track">${stepsHtml}</div>
+      <div style="margin:10px 0;">${itemsHtml}</div>
+      <div style="display:flex;justify-content:space-between;font-weight:700;padding-top:10px;">
+        <span>Total</span><span class="mono">Rs ${data.total}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink-soft);">
+        <span>Advance Due</span><span class="mono">Rs ${data.advance}</span>
+      </div>
+      <div style="font-size:11.5px;color:var(--ink-soft);margin-top:10px;">Last updated: ${data.lastUpdated}</div>
+    </div>`;
 }
 
 async function loadCatalogueAndStart(){

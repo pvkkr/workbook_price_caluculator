@@ -5,236 +5,250 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Workbook Print Desk - Order Your Course Workbooks</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
   :root{
-    --paper:#EFEAE0;
-    --paper-dark:#E3DCCC;
-    --ink:#20241F;
-    --ink-soft:#5A5F55;
-    --stamp:#A8362B;
-    --stamp-dark:#7E281F;
-    --press:#2F5D53;
-    --press-dark:#204640;
-    --line:#C9C0AC;
-    --card:#FBF9F4;
-    --ok:#2F6F4E;
+    --paper:#F1F3F6;
+    --paper-dark:#E8EAF0;
+    --ink:#212121;
+    --ink-soft:#878787;
+    --stamp:#FB641B;
+    --stamp-dark:#E2530A;
+    --press:#2874F0;
+    --press-dark:#185ECC;
+    --line:#E0E0E0;
+    --card:#FFFFFF;
+    --ok:#388E3C;
+    --yellow:#FFE11B;
   }
   *{box-sizing:border-box;}
   body{
     margin:0;
     background:var(--paper);
-    background-image:radial-gradient(circle at 1px 1px, rgba(32,36,31,0.06) 1px, transparent 0);
-    background-size:22px 22px;
     color:var(--ink);
-    font-family:'Inter',sans-serif;
+    font-family:'Roboto',sans-serif;
     line-height:1.45;
   }
-  h1,h2,h3,.mono{font-family:'Space Mono',monospace;}
+  h1,h2,h3,.mono{font-family:'Roboto',sans-serif;}
   a{color:inherit;}
+  body.has-sticky-cart{padding-bottom:74px;}
 
-  .wrap{max-width:1180px;margin:0 auto;padding:0 20px 120px;}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 20px 60px;}
 
-  /* Live location badge - top left, fixed */
+  /* Live location badge */
   .location-badge{
-    position:sticky;top:0;left:0;z-index:50;background:var(--press);color:#fff;
-    padding:7px 16px;font-family:'Space Mono',monospace;font-size:11.5px;
-    display:flex;align-items:center;gap:8px;
+    background:var(--press-dark);color:#fff;padding:6px 16px;font-size:11.5px;
+    display:flex;align-items:center;gap:8px;font-weight:500;
   }
-  .location-badge .dot{width:7px;height:7px;border-radius:50%;background:#8CE8B8;flex-shrink:0;
-    animation:pulse-dot 1.6s infinite;}
+  .location-badge .dot{width:7px;height:7px;border-radius:50%;background:#8CE8B8;flex-shrink:0;animation:pulse-dot 1.6s infinite;}
   @keyframes pulse-dot{0%,100%{opacity:1;}50%{opacity:0.3;}}
 
   /* Ticker */
-  .ticker{background:var(--ink);color:#fff;overflow:hidden;white-space:nowrap;padding:9px 0;
-    font-family:'Space Mono',monospace;font-size:13px;letter-spacing:0.3px;}
+  .ticker{background:var(--ink);color:#fff;overflow:hidden;white-space:nowrap;padding:8px 0;font-size:12.5px;letter-spacing:0.2px;}
   .ticker-track{display:inline-block;padding-left:100%;animation:ticker-scroll 22s linear infinite;}
-  .ticker-track span{margin-right:60px;color:#F2C94C;font-weight:700;}
+  .ticker-track span{margin-right:60px;color:var(--yellow);font-weight:700;}
   @keyframes ticker-scroll{0%{transform:translateX(0);}100%{transform:translateX(-100%);}}
 
-  header.top{
-    display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid var(--ink);
-    padding:22px 0 16px;margin-bottom:20px;flex-wrap:wrap;gap:10px;
+  /* ===== NAVBAR (sticky, Flipkart-style) ===== */
+  .navbar{
+    position:sticky;top:0;z-index:100;background:var(--press);color:#fff;
+    padding:12px 20px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+    box-shadow:0 1px 6px rgba(0,0,0,0.25);
   }
-  .brand{display:flex;align-items:center;gap:14px;}
-  .brand .stamp-badge{
-    width:52px;height:52px;border:3px solid var(--stamp);border-radius:50%;
-    display:flex;align-items:center;justify-content:center;color:var(--stamp);
-    font-family:'Space Mono',monospace;font-weight:700;font-size:11px;
-    transform:rotate(-8deg);letter-spacing:0.5px;text-align:center;line-height:1.1;flex-shrink:0;
+  .navbar .logo{font-weight:900;font-style:italic;font-size:21px;color:#fff;line-height:1;flex-shrink:0;white-space:nowrap;}
+  .navbar .logo small{display:block;font-size:9.5px;font-style:normal;font-weight:500;color:var(--yellow);margin-top:2px;letter-spacing:0.3px;}
+  .navbar .nav-search-bar{
+    flex:1 1 320px;max-width:640px;background:#fff;border-radius:2px;
+    display:flex;align-items:center;padding:9px 12px;gap:8px;
   }
-  .brand h1{font-size:22px;margin:0;letter-spacing:0.5px;}
-  .brand p{margin:2px 0 0;color:var(--ink-soft);font-size:13px;}
-  .status-pill{
-    font-family:'Space Mono',monospace;font-size:12px;background:var(--card);
-    border:1px solid var(--line);padding:6px 12px;border-radius:20px;color:var(--ink-soft);white-space:nowrap;
+  .navbar .nav-search-bar svg{color:var(--press);flex-shrink:0;}
+  .navbar .nav-search-bar input{border:none;outline:none;flex:1;font-size:14px;color:var(--ink);font-family:'Roboto',sans-serif;}
+  .navbar .nav-search-bar .search-count{font-size:11px;color:var(--ink-soft);white-space:nowrap;}
+  .navbar .nav-links{display:flex;align-items:center;gap:22px;margin-left:auto;flex-shrink:0;}
+  .navbar .nav-link{
+    color:#fff;font-size:14px;font-weight:500;cursor:pointer;background:none;border:none;
+    font-family:'Roboto',sans-serif;padding:6px 2px;white-space:nowrap;border-bottom:2px solid transparent;
+  }
+  .navbar .nav-link.active{border-bottom-color:#fff;font-weight:700;}
+  .navbar .cart-icon-wrap{display:flex;align-items:center;gap:7px;color:#fff;cursor:pointer;font-weight:500;font-size:14px;background:none;border:none;font-family:'Roboto',sans-serif;padding:6px 2px;}
+  .navbar .cart-badge{
+    background:var(--stamp);color:#fff;font-size:10.5px;font-weight:700;
+    border-radius:10px;padding:2px 9px;white-space:nowrap;
+  }
+  @media (max-width:760px){
+    .navbar .nav-search-bar{order:3;flex:1 1 100%;}
+    .navbar .nav-links{gap:16px;}
   }
 
-  section{margin-bottom:34px;}
-  .section-label{
-    font-family:'Space Mono',monospace;font-size:12px;letter-spacing:2px;text-transform:uppercase;
-    color:var(--press);margin:0 0 10px;font-weight:700;
-  }
-  .section-title{font-size:20px;margin:0 0 4px;}
+  section{margin-bottom:30px;}
+  .section-label{font-size:11.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--press);margin:0 0 8px;font-weight:700;}
+  .section-title{font-size:19px;margin:0 0 4px;font-weight:700;}
   .section-sub{color:var(--ink-soft);font-size:13.5px;margin:0 0 16px;}
 
   .bulk-banner{
-    background:var(--stamp);color:#fff;text-align:center;padding:11px 14px;border-radius:9px;
-    font-weight:700;font-size:13.5px;margin-bottom:18px;font-family:'Space Mono',monospace;
+    background:linear-gradient(90deg,var(--stamp),var(--stamp-dark));color:#fff;text-align:center;padding:11px 14px;
+    border-radius:3px;font-weight:700;font-size:13.5px;margin:18px 0;letter-spacing:0.2px;
   }
 
   .student-card{
-    background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px 22px;
+    background:var(--card);border:1px solid var(--line);border-radius:3px;padding:20px 22px;
     display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;
-    box-shadow:0 1px 0 rgba(0,0,0,0.03);
+    box-shadow:0 1px 2px rgba(0,0,0,0.05);
   }
-  .field label{display:block;font-size:12px;font-weight:700;color:var(--ink-soft);
-    text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;}
+  .field label{display:block;font-size:11.5px;font-weight:700;color:var(--ink-soft);
+    text-transform:uppercase;letter-spacing:0.4px;margin-bottom:6px;}
   .field input[type=text], .field input[type=tel], .field input[type=email], .field select, .field input[type=number]{
-    width:100%;padding:11px 11px;border:1.5px solid var(--line);border-radius:7px;
-    font-size:15px;font-family:'Inter',sans-serif;background:#fff;color:var(--ink);
+    width:100%;padding:11px 11px;border:1.5px solid var(--line);border-radius:3px;
+    font-size:15px;font-family:'Roboto',sans-serif;background:#fff;color:var(--ink);
   }
-  .field input:focus, .field select:focus{outline:2px solid var(--press);outline-offset:1px;border-color:var(--press);}
+  .field input:focus, .field select:focus{outline:none;border-color:var(--press);box-shadow:0 0 0 2px rgba(40,116,240,0.15);}
   .toggle-row{display:flex;gap:8px;}
   .toggle-btn{
-    flex:1;padding:11px;border:1.5px solid var(--line);border-radius:7px;background:#fff;
-    cursor:pointer;font-weight:600;font-size:14px;color:var(--ink-soft);text-align:center;transition:all .15s;
+    flex:1;padding:11px;border:1.5px solid var(--line);border-radius:3px;background:#fff;
+    cursor:pointer;font-weight:700;font-size:14px;color:var(--ink-soft);text-align:center;transition:all .15s;
   }
   .toggle-btn.active{background:var(--press);border-color:var(--press-dark);color:#fff;}
 
-  .search-bar{
-    display:flex;align-items:center;gap:10px;background:var(--card);border:1.5px solid var(--line);
-    border-radius:9px;padding:11px 14px;margin-bottom:16px;
-  }
-  .search-bar svg{flex-shrink:0;color:var(--ink-soft);}
-  .search-bar input{border:none;outline:none;background:transparent;font-size:15px;width:100%;color:var(--ink);font-family:'Inter',sans-serif;}
   .search-count{font-size:12px;color:var(--ink-soft);white-space:nowrap;}
   .no-results{grid-column:1/-1;text-align:center;padding:30px;color:var(--ink-soft);font-size:14px;}
 
-  .course-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+  .course-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
   @media (max-width:980px){.course-grid{grid-template-columns:repeat(2,1fr);}}
   @media (max-width:560px){.course-grid{grid-template-columns:1fr;}}
 
   .course-box{
-    background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;
-    display:flex;flex-direction:column;gap:10px;position:relative;transition:box-shadow .15s, transform .15s;
+    background:var(--card);border:1px solid var(--line);border-radius:3px;padding:14px;
+    display:flex;flex-direction:column;gap:9px;position:relative;transition:box-shadow .15s, transform .15s;
   }
-  .course-box:hover{box-shadow:0 4px 14px rgba(32,36,31,0.08);transform:translateY(-1px);}
-  .course-box .code{font-family:'Space Mono',monospace;font-size:11px;color:var(--stamp);font-weight:700;}
-  .course-box .title{font-size:14.5px;font-weight:700;line-height:1.3;min-height:38px;}
+  .course-box:hover{box-shadow:0 3px 12px rgba(33,33,33,0.14);transform:translateY(-1px);}
+  .prod-thumb{
+    width:100%;height:64px;background:linear-gradient(135deg,#EAF1FF,#F6F8FC);border-radius:3px;
+    display:flex;align-items:center;justify-content:center;color:var(--press);
+  }
+  .course-box .code{font-size:11px;color:var(--ink-soft);font-weight:500;letter-spacing:0.2px;}
+  .course-box .title{font-size:14px;font-weight:700;line-height:1.3;min-height:36px;color:var(--ink);}
   .course-box .pages{font-size:12px;color:var(--ink-soft);}
   .opt-row{display:flex;gap:6px;}
   .opt-btn{
-    flex:1;padding:8px 4px;font-size:12.5px;border:1.3px solid var(--line);border-radius:6px;background:#fff;
-    cursor:pointer;text-align:center;color:var(--ink-soft);font-weight:600;min-height:38px;
+    flex:1;padding:8px 4px;font-size:12px;border:1.3px solid var(--line);border-radius:3px;background:#fff;
+    cursor:pointer;text-align:center;color:var(--ink-soft);font-weight:600;min-height:36px;
     display:flex;align-items:center;justify-content:center;
   }
-  .opt-btn.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .opt-btn.active{background:var(--press);color:#fff;border-color:var(--press-dark);}
   .bind-row{display:flex;gap:5px;flex-wrap:wrap;}
-  .bind-row .opt-btn{flex:1 1 45%;font-size:11.5px;padding:8px 3px;min-height:38px;}
+  .bind-row .opt-btn{flex:1 1 45%;font-size:11px;padding:8px 3px;min-height:36px;}
   .qty-row{display:flex;align-items:center;gap:8px;}
-  .qty-row input{width:60px;text-align:center;padding:8px;border:1.3px solid var(--line);border-radius:6px;font-size:15px;}
-  .price-preview{font-family:'Space Mono',monospace;font-size:12px;color:var(--press);font-weight:700;}
+  .qty-row input{width:58px;text-align:center;padding:8px;border:1.3px solid var(--line);border-radius:3px;font-size:15px;}
+  .price-preview{font-size:13px;color:var(--ok);font-weight:700;}
   .add-btn{
-    margin-top:2px;padding:11px;border:none;border-radius:7px;background:var(--press);
-    color:#fff;font-weight:700;font-size:13.5px;cursor:pointer;font-family:'Inter',sans-serif;
+    margin-top:2px;padding:11px;border:none;border-radius:3px;background:var(--stamp);
+    color:#fff;font-weight:700;font-size:12.5px;cursor:pointer;font-family:'Roboto',sans-serif;
+    text-transform:uppercase;letter-spacing:0.5px;
   }
-  .add-btn:hover{background:var(--press-dark);}
+  .add-btn:hover{background:var(--stamp-dark);}
   .add-btn:active{transform:scale(0.98);}
 
-  .custom-box{background:#fff;border:2px dashed var(--press);border-radius:10px;padding:18px;}
+  .custom-box{background:#fff;border:1.5px dashed var(--press);border-radius:3px;padding:18px;}
   .custom-box .section-label{margin-bottom:12px;}
   .custom-box .hint{font-size:12px;color:var(--stamp-dark);margin-bottom:12px;}
   .custom-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:10px;align-items:end;}
   @media (max-width:820px){.custom-grid{grid-template-columns:1fr 1fr;}}
   .custom-box .add-btn{padding:12px 18px;}
 
-  .receipt{background:var(--card);border:1px solid var(--line);border-radius:4px;overflow:hidden;
-    box-shadow:0 6px 20px rgba(32,36,31,0.10);}
-  .receipt-head{background:var(--ink);color:#fff;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;}
-  .receipt-head span{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:1px;}
+  .receipt{background:var(--card);border:1px solid var(--line);border-radius:3px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.08);}
+  .receipt-head{background:var(--ink);color:#fff;padding:13px 20px;display:flex;justify-content:space-between;align-items:center;}
+  .receipt-head span{font-size:12px;letter-spacing:0.5px;font-weight:700;text-transform:uppercase;}
   .cart-scroll{overflow-x:auto;}
   table.cart-table{width:100%;border-collapse:collapse;font-size:13px;min-width:640px;}
   table.cart-table th{
-    text-align:left;font-family:'Space Mono',monospace;font-size:10.5px;text-transform:uppercase;
-    letter-spacing:0.5px;color:var(--ink-soft);padding:10px 12px;border-bottom:2px dashed var(--line);white-space:nowrap;
+    text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:0.4px;color:var(--ink-soft);
+    padding:10px 12px;border-bottom:2px solid var(--line);white-space:nowrap;font-weight:700;
   }
-  table.cart-table td{padding:10px 12px;border-bottom:1px dashed var(--line);vertical-align:top;}
+  table.cart-table td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top;}
   table.cart-table tr:last-child td{border-bottom:none;}
-  .rm-btn{background:none;border:none;color:var(--stamp);cursor:pointer;font-size:16px;font-weight:700;padding:4px 8px;}
+  .rm-btn{background:none;border:none;color:var(--press);cursor:pointer;font-size:12.5px;font-weight:700;padding:4px 6px;text-transform:uppercase;}
+  .rm-btn:hover{color:var(--stamp);text-decoration:underline;}
   .empty-cart{padding:30px 20px;text-align:center;color:var(--ink-soft);font-size:14px;}
-  .cart-total{padding:16px 20px;border-top:3px solid var(--ink);background:#fff;}
-  .cart-total-row{display:flex;justify-content:space-between;align-items:center;padding:3px 0;font-size:13.5px;}
-  .cart-total-row.grand{font-size:15px;}
-  .cart-total .amount{font-family:'Space Mono',monospace;font-size:24px;font-weight:700;color:var(--stamp);}
-  .cart-total .label{font-size:13px;color:var(--ink-soft);font-weight:600;text-transform:uppercase;letter-spacing:1px;}
-  .discount-row{color:var(--ok);font-family:'Space Mono',monospace;}
+  .cart-total{padding:16px 20px;border-top:2px solid var(--line);background:#fff;}
+  .cart-total-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:13.5px;}
+  .cart-total-row.grand{font-size:16px;border-top:1px dashed var(--line);margin-top:6px;padding-top:10px;}
+  .cart-total .amount{font-size:22px;font-weight:900;color:var(--ink);}
+  .cart-total .label{font-size:14px;color:var(--ink);font-weight:700;}
+  .discount-row{color:var(--ok);font-weight:600;}
   .advance-row{display:flex;justify-content:space-between;align-items:center;margin-top:10px;
-    padding:10px 12px;background:var(--paper-dark);border-radius:7px;font-size:13px;}
-  .advance-row b{color:var(--stamp-dark);font-family:'Space Mono',monospace;}
+    padding:10px 12px;background:var(--paper);border-radius:3px;font-size:13px;}
+  .advance-row b{color:var(--stamp-dark);}
   .advance-note{font-size:12px;color:var(--ink-soft);margin-top:8px;line-height:1.5;}
   .advance-check{display:flex;align-items:flex-start;gap:8px;margin-top:12px;font-size:13px;}
   .advance-check input{margin-top:3px;flex-shrink:0;width:16px;height:16px;}
 
   .submit-bar{margin-top:18px;display:flex;gap:12px;flex-wrap:wrap;}
   .submit-btn{
-    flex:1;min-width:220px;padding:16px;border:none;border-radius:8px;font-size:15px;font-weight:800;
-    cursor:pointer;font-family:'Inter',sans-serif;letter-spacing:0.3px;
+    flex:1;min-width:220px;padding:16px;border:none;border-radius:3px;font-size:15px;font-weight:700;
+    cursor:pointer;font-family:'Roboto',sans-serif;letter-spacing:0.3px;text-transform:uppercase;
   }
-  .submit-btn.primary{background:var(--stamp);color:#fff;}
-  .submit-btn.primary:hover{background:var(--stamp-dark);}
+  .submit-btn.primary{background:linear-gradient(90deg,var(--stamp),var(--stamp-dark));color:#fff;}
+  .submit-btn.primary:hover{filter:brightness(1.05);}
   .submit-btn:disabled{opacity:0.45;cursor:not-allowed;}
   .submit-warning{
-    font-size:12.5px;color:var(--stamp-dark);background:#FBEAE8;border:1px solid #eec7c1;
-    padding:9px 12px;border-radius:7px;margin-top:10px;font-weight:600;
+    font-size:12.5px;color:var(--stamp-dark);background:#FFF1EC;border:1px solid #FFD5C4;
+    padding:9px 12px;border-radius:3px;margin-top:10px;font-weight:600;
   }
-  .msg{font-size:13px;padding:10px 14px;border-radius:7px;margin-top:10px;display:none;}
+  .msg{font-size:13px;padding:10px 14px;border-radius:3px;margin-top:10px;display:none;}
   .msg.show{display:block;}
-  .msg.ok{background:#E4F1E9;color:var(--ok);border:1px solid #b7dcc5;}
-  .msg.err{background:#FBEAE8;color:var(--stamp-dark);border:1px solid #eec7c1;}
+  .msg.ok{background:#E7F5E8;color:var(--ok);border:1px solid #BEE3C0;}
+  .msg.err{background:#FFF1EC;color:var(--stamp-dark);border:1px solid #FFD5C4;}
 
   .price-legend{
-    display:flex;gap:14px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11.5px;
-    color:var(--ink-soft);background:var(--paper-dark);border-radius:8px;padding:10px 16px;margin-bottom:20px;
+    display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;
+    color:var(--ink-soft);background:#fff;border:1px solid var(--line);border-radius:3px;padding:10px 16px;margin-bottom:18px;
   }
   .price-legend b{color:var(--ink);}
-  footer{text-align:center;color:var(--ink-soft);font-size:12px;margin-top:50px;}
+  footer{text-align:center;color:var(--ink-soft);font-size:12px;margin-top:40px;padding:16px 0;}
 
-  .view-toggle{display:flex;gap:10px;margin-bottom:22px;}
-  .view-toggle-btn{
-    flex:1;padding:13px;border:1.5px solid var(--line);border-radius:8px;background:var(--card);
-    cursor:pointer;font-weight:700;font-size:14px;color:var(--ink-soft);text-align:center;font-family:'Inter',sans-serif;
+  /* ===== STICKY BOTTOM CART BAR ===== */
+  #stickyCartBar{
+    position:fixed;left:0;right:0;bottom:0;z-index:90;background:#fff;border-top:1px solid var(--line);
+    box-shadow:0 -2px 10px rgba(0,0,0,0.12);padding:10px 18px;display:none;align-items:center;
+    justify-content:space-between;gap:14px;
   }
-  .view-toggle-btn.active{background:var(--ink);border-color:var(--ink);color:#fff;}
+  #stickyCartBar .sc-info{display:flex;flex-direction:column;line-height:1.25;}
+  #stickyCartBar .sc-count{font-size:11.5px;color:var(--ink-soft);}
+  #stickyCartBar .sc-total{font-size:17px;font-weight:900;color:var(--ink);}
+  #stickyCartBar button{
+    background:var(--stamp);color:#fff;border:none;padding:12px 24px;border-radius:3px;
+    font-weight:700;font-size:13.5px;text-transform:uppercase;cursor:pointer;letter-spacing:0.4px;
+  }
+  #stickyCartBar button:hover{background:var(--stamp-dark);}
 
-  .track-card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px 22px;}
-  .track-status-banner{padding:14px 18px;border-radius:9px;font-weight:700;font-size:15px;margin-bottom:18px;font-family:'Space Mono',monospace;}
-  .track-status-banner.cancelled{background:#FBEAE8;color:var(--stamp-dark);border:1px solid #eec7c1;}
-  .track-status-banner.active{background:#E4F1E9;color:var(--ok);border:1px solid #b7dcc5;}
+  .view-toggle{display:none;} /* replaced by navbar nav-links, kept for legacy CSS safety */
+
+  .track-card{background:var(--card);border:1px solid var(--line);border-radius:3px;padding:20px 22px;}
+  .track-status-banner{padding:14px 18px;border-radius:3px;font-weight:700;font-size:15px;margin-bottom:18px;}
+  .track-status-banner.cancelled{background:#FFF1EC;color:var(--stamp-dark);border:1px solid #FFD5C4;}
+  .track-status-banner.active{background:#E7F5E8;color:var(--ok);border:1px solid #BEE3C0;}
   .steps-track{display:flex;align-items:flex-start;justify-content:space-between;margin:18px 0 26px;}
   .step-node{flex:1;text-align:center;position:relative;}
   .step-node .dot{
     width:26px;height:26px;border-radius:50%;background:var(--line);margin:0 auto 8px;
     display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700;
-    font-family:'Space Mono',monospace;position:relative;z-index:2;
+    position:relative;z-index:2;
   }
-  .step-node.done .dot{background:var(--press);}
-  .step-node.current .dot{background:var(--stamp);}
+  .step-node.done .dot{background:var(--ok);}
+  .step-node.current .dot{background:var(--press);}
   .step-node .line{position:absolute;top:13px;left:-50%;width:100%;height:3px;background:var(--line);z-index:1;}
   .step-node:first-child .line{display:none;}
-  .step-node.done .line, .step-node.current .line{background:var(--press);}
+  .step-node.done .line{background:var(--ok);}
+  .step-node.current .line{background:var(--press);}
   .step-node .lbl{font-size:10.5px;color:var(--ink-soft);font-weight:600;line-height:1.3;}
   .step-node.current .lbl, .step-node.done .lbl{color:var(--ink);}
-  .track-not-found{padding:24px;text-align:center;color:var(--ink-soft);background:var(--card);border:1px dashed var(--line);border-radius:10px;}
-  .pay-pill{display:inline-block;padding:4px 10px;border-radius:20px;font-size:11.5px;font-weight:700;font-family:'Space Mono',monospace;}
-  .pay-pill.done{background:#E4F1E9;color:var(--ok);}
-  .pay-pill.partial{background:#FFF4DE;color:#8a5a00;}
-  .pay-pill.not-paid{background:#FBEAE8;color:var(--stamp-dark);}
+  .track-not-found{padding:24px;text-align:center;color:var(--ink-soft);background:var(--card);border:1px dashed var(--line);border-radius:3px;}
+  .pay-pill{display:inline-block;padding:4px 12px;border-radius:20px;font-size:11.5px;font-weight:700;}
+  .pay-pill.done{background:#E7F5E8;color:var(--ok);}
+  .pay-pill.partial{background:#FFF6DC;color:#946200;}
+  .pay-pill.not-paid{background:#FFF1EC;color:var(--stamp-dark);}
 
   @media (max-width:640px){
-    .brand h1{font-size:18px;}
-    .brand p{font-size:11.5px;}
-    .status-pill{font-size:11px;padding:5px 10px;}
     .toggle-row{flex-direction:column;}
     .submit-btn{min-width:100%;}
     table.cart-table{font-size:12px;}
@@ -249,23 +263,26 @@
   <div class="ticker-track" id="tickerTrack"><span>Loading...</span></div>
 </div>
 
-<div class="wrap">
+<nav class="navbar">
+  <div class="logo">Workbook<br>Print Desk<small>Explore workbooks &amp; binding</small></div>
 
-  <header class="top">
-    <div class="brand">
-      <div class="stamp-badge">PRINT<br>DESK</div>
-      <div>
-        <h1>Workbook Print Desk</h1>
-        <p>Course workbook printing &amp; binding - Hosteler / Day Scholar delivery</p>
-      </div>
-    </div>
-    <div class="status-pill" id="cartCountPill">0 items in cart</div>
-  </header>
-
-  <div class="view-toggle">
-    <button type="button" class="view-toggle-btn active" id="tabOrderBtn" onclick="setView('order')">Place Order</button>
-    <button type="button" class="view-toggle-btn" id="tabTrackBtn" onclick="setView('track')">Track Order</button>
+  <div class="nav-search-bar">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+    <input type="text" id="courseSearch" placeholder="Search for courses, codes...">
+    <span class="search-count" id="searchCount"></span>
   </div>
+
+  <div class="nav-links">
+    <button type="button" class="nav-link active" id="tabOrderBtn" onclick="setView('order')">Shop</button>
+    <button type="button" class="nav-link" id="tabTrackBtn" onclick="setView('track')">Track Order</button>
+    <button type="button" class="cart-icon-wrap" onclick="setView('order'); scrollToCart();">
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+      <span class="cart-badge" id="cartCountPill">0 items in cart</span>
+    </button>
+  </div>
+</nav>
+
+<div class="wrap">
 
   <div id="orderView">
 
@@ -345,13 +362,7 @@
   <section>
     <div class="section-label">Step 2</div>
     <h2 class="section-title">Choose Courses</h2>
-    <p class="section-sub">For each course pick print side and binding, then add it to your cart. Add the same course again for a different combination.</p>
-
-    <div class="search-bar">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-      <input type="text" id="courseSearch" placeholder="Search by course name or code...">
-      <span class="search-count" id="searchCount"></span>
-    </div>
+    <p class="section-sub">For each course pick print side and binding, then add it to your cart. Add the same course again for a different combination. (Tip: search up top in the navbar.)</p>
 
     <div class="course-grid" id="courseGrid"></div>
   </section>
@@ -383,18 +394,18 @@
             <option value="book_soft">Book Bind - Soft (Rs 30)</option>
           </select>
         </div>
-        <button class="add-btn" onclick="addCustom()">+ Add Custom Course</button>
+        <button class="add-btn" onclick="addCustom()">ADD CUSTOM COURSE</button>
       </div>
     </div>
   </section>
 
   <!-- CART / RECEIPT -->
-  <section>
+  <section id="cartSection">
     <div class="section-label">Step 3</div>
     <h2 class="section-title">Your Cart</h2>
     <div class="receipt">
       <div class="receipt-head">
-        <span>ORDER DOCKET</span>
+        <span>Order Summary</span>
         <span id="itemCountLabel">0 line items</span>
       </div>
       <div class="cart-scroll">
@@ -417,10 +428,10 @@
     </div>
 
     <div class="submit-bar">
-      <button class="submit-btn primary" id="submitBtn" onclick="submitOrder()">Submit Order (Sheet + WhatsApp)</button>
+      <button class="submit-btn primary" id="submitBtn" onclick="submitOrder()">Place Order (Sheet + WhatsApp)</button>
     </div>
     <div class="submit-warning">
-      Important: Tap Submit only once, then wait a few seconds. Do not tap multiple times - this can create duplicate orders.
+      Important: Tap Place Order only once, then wait a few seconds. Do not tap multiple times - this can create duplicate orders.
     </div>
     <div class="msg" id="msgBox"></div>
   </section>
@@ -453,12 +464,22 @@
   <footer>Workbook Print Desk - Orders are recorded to Google Sheets and sent via WhatsApp</footer>
 </div>
 
+<div id="stickyCartBar">
+  <div class="sc-info">
+    <span class="sc-count" id="stickyCartCount">0 books</span>
+    <span class="sc-total" id="stickyCartTotal">Rs 0</span>
+  </div>
+  <button type="button" onclick="scrollToCart()">View Cart</button>
+</div>
+
+
 <script>
 /* ============ CONFIG - EDIT THESE ============ */
 const SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxcpA2XsQi4k6yJxHxslr3w9s3dzgg5nwyN3yk9qqHDQNEv_T0WJkT-QOZAakRJC1as/exec";
 const WHATSAPP_NUMBER  = "919390110070"; // country code + number, no + or spaces
 const UPI_ID = "9390110070-4@ibl"; // shown in the advance-payment note
 const FORM_SECRET = "klu-print-desk-2026"; // must match FORM_SECRET in Code.gs
+const CUSTOM_COURSE_DRIVE_LINK = "https://drive.google.com/drive/folders/1PQ9wr0F1-RtAS6UnsaK9CtdhtpY8ivWA"; // where students upload PDFs for courses not in the catalogue
 /* =============================================== */
 
 const DEFAULT_CATALOGUE = [
@@ -551,6 +572,9 @@ function buildCourseGrid(catalogue){
     box.className = 'course-box';
     box.dataset.searchText = (c.code + ' ' + c.title).toLowerCase();
     box.innerHTML = `
+      <div class="prod-thumb">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+      </div>
       <div class="code">${c.code}</div>
       <div class="title">${c.title}</div>
       <div class="pages">${c.pages} pages</div>
@@ -569,7 +593,7 @@ function buildCourseGrid(catalogue){
         <input type="number" min="1" value="1" data-role="qty">
       </div>
       <div class="price-preview" data-role="preview">~ Rs ${lineCost(c.pages,'1','spiral',1).total}</div>
-      <button class="add-btn">+ Add to Cart</button>
+      <button class="add-btn">ADD TO CART</button>
     `;
     const sidesRow = box.querySelector('[data-role="sides"]');
     const bindRow = box.querySelector('[data-role="bind"]');
@@ -665,12 +689,15 @@ function renderCart(){
   document.getElementById('cartCountPill').textContent = cart.length + ' item' + (cart.length===1?'':'s') + ' in cart';
   document.getElementById('itemCountLabel').textContent = cart.length + ' line items';
 
+  const stickyBar = document.getElementById('stickyCartBar');
   if(cart.length === 0){
     body.innerHTML = '<div class="empty-cart">No items added yet. Pick a course above to begin.</div>';
     document.getElementById('subtotalAmount').textContent = 'Rs 0';
     document.getElementById('grandTotal').textContent = 'Rs 0';
     document.getElementById('advanceAmount').textContent = 'Rs 0';
     document.getElementById('discountRow').style.display = 'none';
+    if(stickyBar) stickyBar.style.display = 'none';
+    document.body.classList.remove('has-sticky-cart');
     return;
   }
 
@@ -688,7 +715,7 @@ function renderCart(){
       <td>${item.qty}</td>
       <td>${c.sheets * item.qty}</td>
       <td class="mono">Rs ${c.total}</td>
-      <td><button class="rm-btn" onclick="removeFromCart(${item.id})">x</button></td>
+      <td><button class="rm-btn" onclick="removeFromCart(${item.id})">Remove</button></td>
     </tr>`;
   });
   rows += '</tbody></table>';
@@ -705,6 +732,18 @@ function renderCart(){
   } else {
     discountRow.style.display = 'none';
   }
+
+  if(stickyBar){
+    stickyBar.style.display = 'flex';
+    document.getElementById('stickyCartCount').textContent = t.totalQty + ' book' + (t.totalQty===1?'':'s');
+    document.getElementById('stickyCartTotal').textContent = 'Rs ' + t.grand;
+    document.body.classList.add('has-sticky-cart');
+  }
+}
+
+function scrollToCart(){
+  const el = document.getElementById('cartSection');
+  if(el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function showMsg(text, ok){
@@ -734,7 +773,9 @@ function buildWhatsAppText(orderId, name, contact, reg, dept, type, deliveryDeta
   });
   lines.push('');
   if(customItems.length > 0){
-    lines.push('*ACTION NEEDED:* Please send the PDF/material for: ' + customItems.join(', ') + ' - reply to this message with the file(s) for order ' + orderId + '.');
+    lines.push('*ACTION NEEDED:* The following course(s) are not in the catalogue: ' + customItems.join(', ') + '.');
+    lines.push('Please upload the subject PDF/material here: ' + CUSTOM_COURSE_DRIVE_LINK);
+    lines.push('(Name the file with your Order ID ' + orderId + ' and the course name so it can be matched.)');
     lines.push('');
   }
   lines.push('Subtotal: Rs ' + t.subtotal);
@@ -775,10 +816,17 @@ async function submitOrder(){
   const t = computeCartTotals();
   const items = cart.map(item=>{
     const c = lineCost(item.pages, item.sides, item.binding, item.qty);
+    // If a bulk discount applies, apply the same 10% reduction to THIS item's
+    // service fee too (not just the cart-level total) - otherwise each
+    // line item stored in the sheet would still show the full undiscounted
+    // amount, and the sum of line items would silently not match what the
+    // student was actually charged (and would overstate per-item profit).
+    const discountedServiceFee = t.bulkEligible ? Math.round(c.serviceFee * 0.9) : c.serviceFee;
+    const discountedLineTotal = c.printCost + c.bindCost + discountedServiceFee;
     return {
       course: item.course, code: item.code, pages: item.pages, sides: item.sides + ' Side',
       binding: BIND_LABEL[item.binding], qty: item.qty, sheets: c.sheets * item.qty,
-      printCost: c.printCost, bindCost: c.bindCost, serviceFee: c.serviceFee, lineTotal: c.total
+      printCost: c.printCost, bindCost: c.bindCost, serviceFee: discountedServiceFee, lineTotal: discountedLineTotal
     };
   });
 
@@ -795,24 +843,50 @@ async function submitOrder(){
   const waWin = window.open('', '_blank');
 
   let orderId = null;
-  try{
-    if(SHEET_WEBAPP_URL && !SHEET_WEBAPP_URL.startsWith('PASTE_')){
-      const res = await fetchWithTimeout(SHEET_WEBAPP_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(payload)
-      }, 8000);
-      const result = await res.json();
-      if(result && result.orderId) orderId = result.orderId;
-      showMsg('Order ' + (orderId || '') + ' recorded and sent to WhatsApp!', true);
-    } else {
-      showMsg('Opened WhatsApp. (Sheet URL not configured yet, so nothing was saved.)', true);
+  let saveFailed = false;
+  let failReason = '';
+
+  if(SHEET_WEBAPP_URL && !SHEET_WEBAPP_URL.startsWith('PASTE_')){
+    // One retry on top of the first attempt - covers slow cold-starts or a
+    // one-off network blip, without making the student wait indefinitely.
+    for(let attempt = 1; attempt <= 2 && !orderId; attempt++){
+      try{
+        const res = await fetchWithTimeout(SHEET_WEBAPP_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        }, 15000);
+        const result = await res.json();
+
+        if(result && result.status === 'ok' && result.orderId){
+          orderId = result.orderId;
+        } else {
+          // The server explicitly rejected this - retrying won't help, so stop.
+          saveFailed = true;
+          failReason = (result && result.message) ? result.message : 'Unknown server error.';
+          break;
+        }
+      }catch(err){
+        saveFailed = true;
+        failReason = 'Could not reach the sheet (timeout or network error).';
+        if(attempt === 1) await new Promise(r => setTimeout(r, 1200)); // brief pause before retry
+      }
     }
-  }catch(err){
-    showMsg('Could not confirm with the sheet (it may still have saved) - WhatsApp message prepared without a confirmed Order ID. Please check with the print desk.', false);
+  } else {
+    saveFailed = true;
+    failReason = 'Sheet URL not configured yet.';
   }
 
-  const text = buildWhatsAppText(orderId || 'PENDING', name, contact, reg, dept, stuType, deliveryDetail, t);
+  if(orderId){
+    showMsg('Order ' + orderId + ' recorded and sent to WhatsApp!', true);
+  } else {
+    // Use a locally-generated, timestamp-based fallback ID so it's at least
+    // unique and identifiable in the WhatsApp message, even though nothing
+    // was saved to the sheet. This is NOT a real trackable Order ID.
+    orderId = 'LOCAL-' + Date.now().toString().slice(-6);
+    showMsg('NOT SAVED TO SHEET (' + failReason + '). WhatsApp message prepared with a temporary ID (' + orderId + ') - please tell the print desk directly so they can add it manually.', false);
+  }
+  const text = buildWhatsAppText(orderId, name, contact, reg, dept, stuType, deliveryDetail, t);
   const waUrl = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(text);
   if(waWin) waWin.location = waUrl; else window.open(waUrl, '_blank');
 
@@ -825,6 +899,9 @@ function setView(view){
   document.getElementById('trackView').style.display = view === 'track' ? '' : 'none';
   document.getElementById('tabOrderBtn').classList.toggle('active', view === 'order');
   document.getElementById('tabTrackBtn').classList.toggle('active', view === 'track');
+  const stickyBar = document.getElementById('stickyCartBar');
+  if(stickyBar && view === 'track'){ stickyBar.style.display = 'none'; document.body.classList.remove('has-sticky-cart'); }
+  if(stickyBar && view === 'order') renderCart(); // restore sticky bar visibility if cart has items
 }
 
 const STATUS_STEPS = ["Received", "Printing", "Ready for Pickup/Delivery", "Delivered"];

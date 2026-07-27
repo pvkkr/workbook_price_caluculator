@@ -24,8 +24,7 @@
   body{
     margin:0;
     background:var(--paper);
-    background-image:
-      radial-gradient(circle at 1px 1px, rgba(32,36,31,0.06) 1px, transparent 0);
+    background-image:radial-gradient(circle at 1px 1px, rgba(32,36,31,0.06) 1px, transparent 0);
     background-size:22px 22px;
     color:var(--ink);
     font-family:'Inter',sans-serif;
@@ -36,21 +35,25 @@
 
   .wrap{max-width:1180px;margin:0 auto;padding:0 20px 120px;}
 
-  /* Ticker */
-  .ticker{
-    background:var(--ink);color:#fff;overflow:hidden;white-space:nowrap;
-    padding:9px 0;font-family:'Space Mono',monospace;font-size:13px;letter-spacing:0.3px;
+  /* Live location badge - top left, fixed */
+  .location-badge{
+    position:sticky;top:0;left:0;z-index:50;background:var(--press);color:#fff;
+    padding:7px 16px;font-family:'Space Mono',monospace;font-size:11.5px;
+    display:flex;align-items:center;gap:8px;
   }
+  .location-badge .dot{width:7px;height:7px;border-radius:50%;background:#8CE8B8;flex-shrink:0;
+    animation:pulse-dot 1.6s infinite;}
+  @keyframes pulse-dot{0%,100%{opacity:1;}50%{opacity:0.3;}}
+
+  /* Ticker */
+  .ticker{background:var(--ink);color:#fff;overflow:hidden;white-space:nowrap;padding:9px 0;
+    font-family:'Space Mono',monospace;font-size:13px;letter-spacing:0.3px;}
   .ticker-track{display:inline-block;padding-left:100%;animation:ticker-scroll 22s linear infinite;}
   .ticker-track span{margin-right:60px;color:#F2C94C;font-weight:700;}
-  @keyframes ticker-scroll{
-    0%{transform:translateX(0);}
-    100%{transform:translateX(-100%);}
-  }
+  @keyframes ticker-scroll{0%{transform:translateX(0);}100%{transform:translateX(-100%);}}
 
   header.top{
-    display:flex;align-items:center;justify-content:space-between;
-    border-bottom:3px solid var(--ink);
+    display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid var(--ink);
     padding:22px 0 16px;margin-bottom:20px;flex-wrap:wrap;gap:10px;
   }
   .brand{display:flex;align-items:center;gap:14px;}
@@ -58,34 +61,36 @@
     width:52px;height:52px;border:3px solid var(--stamp);border-radius:50%;
     display:flex;align-items:center;justify-content:center;color:var(--stamp);
     font-family:'Space Mono',monospace;font-weight:700;font-size:11px;
-    transform:rotate(-8deg);letter-spacing:0.5px;text-align:center;line-height:1.1;
-    flex-shrink:0;
+    transform:rotate(-8deg);letter-spacing:0.5px;text-align:center;line-height:1.1;flex-shrink:0;
   }
   .brand h1{font-size:22px;margin:0;letter-spacing:0.5px;}
   .brand p{margin:2px 0 0;color:var(--ink-soft);font-size:13px;}
   .status-pill{
     font-family:'Space Mono',monospace;font-size:12px;background:var(--card);
-    border:1px solid var(--line);padding:6px 12px;border-radius:20px;color:var(--ink-soft);
-    white-space:nowrap;
+    border:1px solid var(--line);padding:6px 12px;border-radius:20px;color:var(--ink-soft);white-space:nowrap;
   }
 
   section{margin-bottom:34px;}
   .section-label{
-    font-family:'Space Mono',monospace;font-size:12px;letter-spacing:2px;
-    text-transform:uppercase;color:var(--press);margin:0 0 10px;font-weight:700;
+    font-family:'Space Mono',monospace;font-size:12px;letter-spacing:2px;text-transform:uppercase;
+    color:var(--press);margin:0 0 10px;font-weight:700;
   }
   .section-title{font-size:20px;margin:0 0 4px;}
   .section-sub{color:var(--ink-soft);font-size:13.5px;margin:0 0 16px;}
 
-  /* Student card */
+  .bulk-banner{
+    background:var(--stamp);color:#fff;text-align:center;padding:11px 14px;border-radius:9px;
+    font-weight:700;font-size:13.5px;margin-bottom:18px;font-family:'Space Mono',monospace;
+  }
+
   .student-card{
-    background:var(--card);border:1px solid var(--line);border-radius:10px;
-    padding:20px 22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;
+    background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px 22px;
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;
     box-shadow:0 1px 0 rgba(0,0,0,0.03);
   }
   .field label{display:block;font-size:12px;font-weight:700;color:var(--ink-soft);
     text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;}
-  .field input[type=text], .field input[type=tel], .field select, .field input[type=number]{
+  .field input[type=text], .field input[type=tel], .field input[type=email], .field select, .field input[type=number]{
     width:100%;padding:11px 11px;border:1.5px solid var(--line);border-radius:7px;
     font-size:15px;font-family:'Inter',sans-serif;background:#fff;color:var(--ink);
   }
@@ -93,35 +98,26 @@
   .toggle-row{display:flex;gap:8px;}
   .toggle-btn{
     flex:1;padding:11px;border:1.5px solid var(--line);border-radius:7px;background:#fff;
-    cursor:pointer;font-weight:600;font-size:14px;color:var(--ink-soft);text-align:center;
-    transition:all .15s;
+    cursor:pointer;font-weight:600;font-size:14px;color:var(--ink-soft);text-align:center;transition:all .15s;
   }
   .toggle-btn.active{background:var(--press);border-color:var(--press-dark);color:#fff;}
 
-  /* Search bar */
   .search-bar{
     display:flex;align-items:center;gap:10px;background:var(--card);border:1.5px solid var(--line);
     border-radius:9px;padding:11px 14px;margin-bottom:16px;
   }
   .search-bar svg{flex-shrink:0;color:var(--ink-soft);}
-  .search-bar input{
-    border:none;outline:none;background:transparent;font-size:15px;width:100%;color:var(--ink);
-    font-family:'Inter',sans-serif;
-  }
+  .search-bar input{border:none;outline:none;background:transparent;font-size:15px;width:100%;color:var(--ink);font-family:'Inter',sans-serif;}
   .search-count{font-size:12px;color:var(--ink-soft);white-space:nowrap;}
   .no-results{grid-column:1/-1;text-align:center;padding:30px;color:var(--ink-soft);font-size:14px;}
 
-  /* Course grid */
-  .course-grid{
-    display:grid;grid-template-columns:repeat(4,1fr);gap:16px;
-  }
+  .course-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
   @media (max-width:980px){.course-grid{grid-template-columns:repeat(2,1fr);}}
   @media (max-width:560px){.course-grid{grid-template-columns:1fr;}}
 
   .course-box{
-    background:var(--card);border:1px solid var(--line);border-radius:10px;
-    padding:16px;display:flex;flex-direction:column;gap:10px;position:relative;
-    transition:box-shadow .15s, transform .15s;
+    background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;
+    display:flex;flex-direction:column;gap:10px;position:relative;transition:box-shadow .15s, transform .15s;
   }
   .course-box:hover{box-shadow:0 4px 14px rgba(32,36,31,0.08);transform:translateY(-1px);}
   .course-box .code{font-family:'Space Mono',monospace;font-size:11px;color:var(--stamp);font-weight:700;}
@@ -129,9 +125,9 @@
   .course-box .pages{font-size:12px;color:var(--ink-soft);}
   .opt-row{display:flex;gap:6px;}
   .opt-btn{
-    flex:1;padding:8px 4px;font-size:12.5px;border:1.3px solid var(--line);border-radius:6px;
-    background:#fff;cursor:pointer;text-align:center;color:var(--ink-soft);font-weight:600;
-    min-height:38px;display:flex;align-items:center;justify-content:center;
+    flex:1;padding:8px 4px;font-size:12.5px;border:1.3px solid var(--line);border-radius:6px;background:#fff;
+    cursor:pointer;text-align:center;color:var(--ink-soft);font-weight:600;min-height:38px;
+    display:flex;align-items:center;justify-content:center;
   }
   .opt-btn.active{background:var(--ink);color:#fff;border-color:var(--ink);}
   .bind-row{display:flex;gap:5px;flex-wrap:wrap;}
@@ -146,46 +142,35 @@
   .add-btn:hover{background:var(--press-dark);}
   .add-btn:active{transform:scale(0.98);}
 
-  /* Custom course card */
-  .custom-box{
-    background:#fff;border:2px dashed var(--press);border-radius:10px;padding:18px;
-  }
+  .custom-box{background:#fff;border:2px dashed var(--press);border-radius:10px;padding:18px;}
   .custom-box .section-label{margin-bottom:12px;}
+  .custom-box .hint{font-size:12px;color:var(--stamp-dark);margin-bottom:12px;}
   .custom-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:10px;align-items:end;}
   @media (max-width:820px){.custom-grid{grid-template-columns:1fr 1fr;}}
   .custom-box .add-btn{padding:12px 18px;}
 
-  /* Cart - receipt style */
-  .receipt{
-    background:var(--card);border:1px solid var(--line);border-radius:4px;
-    padding:0;overflow:hidden;
-    box-shadow:0 6px 20px rgba(32,36,31,0.10);
-  }
-  .receipt-head{
-    background:var(--ink);color:#fff;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;
-  }
+  .receipt{background:var(--card);border:1px solid var(--line);border-radius:4px;overflow:hidden;
+    box-shadow:0 6px 20px rgba(32,36,31,0.10);}
+  .receipt-head{background:var(--ink);color:#fff;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;}
   .receipt-head span{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:1px;}
   .cart-scroll{overflow-x:auto;}
   table.cart-table{width:100%;border-collapse:collapse;font-size:13px;min-width:640px;}
   table.cart-table th{
     text-align:left;font-family:'Space Mono',monospace;font-size:10.5px;text-transform:uppercase;
-    letter-spacing:0.5px;color:var(--ink-soft);padding:10px 12px;border-bottom:2px dashed var(--line);
-    white-space:nowrap;
+    letter-spacing:0.5px;color:var(--ink-soft);padding:10px 12px;border-bottom:2px dashed var(--line);white-space:nowrap;
   }
   table.cart-table td{padding:10px 12px;border-bottom:1px dashed var(--line);vertical-align:top;}
   table.cart-table tr:last-child td{border-bottom:none;}
   .rm-btn{background:none;border:none;color:var(--stamp);cursor:pointer;font-size:16px;font-weight:700;padding:4px 8px;}
   .empty-cart{padding:30px 20px;text-align:center;color:var(--ink-soft);font-size:14px;}
-  .cart-total{
-    padding:16px 20px;border-top:3px solid var(--ink);background:#fff;
-  }
-  .cart-total-row{display:flex;justify-content:space-between;align-items:center;}
+  .cart-total{padding:16px 20px;border-top:3px solid var(--ink);background:#fff;}
+  .cart-total-row{display:flex;justify-content:space-between;align-items:center;padding:3px 0;font-size:13.5px;}
+  .cart-total-row.grand{font-size:15px;}
   .cart-total .amount{font-family:'Space Mono',monospace;font-size:24px;font-weight:700;color:var(--stamp);}
   .cart-total .label{font-size:13px;color:var(--ink-soft);font-weight:600;text-transform:uppercase;letter-spacing:1px;}
-  .advance-row{
-    display:flex;justify-content:space-between;align-items:center;margin-top:10px;
-    padding:10px 12px;background:var(--paper-dark);border-radius:7px;font-size:13px;
-  }
+  .discount-row{color:var(--ok);font-family:'Space Mono',monospace;}
+  .advance-row{display:flex;justify-content:space-between;align-items:center;margin-top:10px;
+    padding:10px 12px;background:var(--paper-dark);border-radius:7px;font-size:13px;}
   .advance-row b{color:var(--stamp-dark);font-family:'Space Mono',monospace;}
   .advance-note{font-size:12px;color:var(--ink-soft);margin-top:8px;line-height:1.5;}
   .advance-check{display:flex;align-items:flex-start;gap:8px;margin-top:12px;font-size:13px;}
@@ -215,21 +200,15 @@
   .price-legend b{color:var(--ink);}
   footer{text-align:center;color:var(--ink-soft);font-size:12px;margin-top:50px;}
 
-  /* View toggle */
   .view-toggle{display:flex;gap:10px;margin-bottom:22px;}
   .view-toggle-btn{
     flex:1;padding:13px;border:1.5px solid var(--line);border-radius:8px;background:var(--card);
-    cursor:pointer;font-weight:700;font-size:14px;color:var(--ink-soft);text-align:center;
-    font-family:'Inter',sans-serif;
+    cursor:pointer;font-weight:700;font-size:14px;color:var(--ink-soft);text-align:center;font-family:'Inter',sans-serif;
   }
   .view-toggle-btn.active{background:var(--ink);border-color:var(--ink);color:#fff;}
 
-  /* Track order */
   .track-card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px 22px;}
-  .track-status-banner{
-    padding:14px 18px;border-radius:9px;font-weight:700;font-size:15px;margin-bottom:18px;
-    font-family:'Space Mono',monospace;
-  }
+  .track-status-banner{padding:14px 18px;border-radius:9px;font-weight:700;font-size:15px;margin-bottom:18px;font-family:'Space Mono',monospace;}
   .track-status-banner.cancelled{background:#FBEAE8;color:var(--stamp-dark);border:1px solid #eec7c1;}
   .track-status-banner.active{background:#E4F1E9;color:var(--ok);border:1px solid #b7dcc5;}
   .steps-track{display:flex;align-items:flex-start;justify-content:space-between;margin:18px 0 26px;}
@@ -241,15 +220,16 @@
   }
   .step-node.done .dot{background:var(--press);}
   .step-node.current .dot{background:var(--stamp);}
-  .step-node .line{
-    position:absolute;top:13px;left:-50%;width:100%;height:3px;background:var(--line);z-index:1;
-  }
+  .step-node .line{position:absolute;top:13px;left:-50%;width:100%;height:3px;background:var(--line);z-index:1;}
   .step-node:first-child .line{display:none;}
   .step-node.done .line, .step-node.current .line{background:var(--press);}
   .step-node .lbl{font-size:10.5px;color:var(--ink-soft);font-weight:600;line-height:1.3;}
   .step-node.current .lbl, .step-node.done .lbl{color:var(--ink);}
-  .track-not-found{padding:24px;text-align:center;color:var(--ink-soft);background:var(--card);
-    border:1px dashed var(--line);border-radius:10px;}
+  .track-not-found{padding:24px;text-align:center;color:var(--ink-soft);background:var(--card);border:1px dashed var(--line);border-radius:10px;}
+  .pay-pill{display:inline-block;padding:4px 10px;border-radius:20px;font-size:11.5px;font-weight:700;font-family:'Space Mono',monospace;}
+  .pay-pill.done{background:#E4F1E9;color:var(--ok);}
+  .pay-pill.partial{background:#FFF4DE;color:#8a5a00;}
+  .pay-pill.not-paid{background:#FBEAE8;color:var(--stamp-dark);}
 
   @media (max-width:640px){
     .brand h1{font-size:18px;}
@@ -263,10 +243,10 @@
 </head>
 <body>
 
+<div class="location-badge" id="locationBadge"><span class="dot"></span><span id="locationText">Loading location...</span></div>
+
 <div class="ticker" id="tickerBar">
-  <div class="ticker-track" id="tickerTrack">
-    <span>Loading...</span>
-  </div>
+  <div class="ticker-track" id="tickerTrack"><span>Loading...</span></div>
 </div>
 
 <div class="wrap">
@@ -288,6 +268,8 @@
   </div>
 
   <div id="orderView">
+
+  <div class="bulk-banner">BULK DISCOUNT: Order 30+ books in one go and get 10% off the service fee</div>
 
   <div class="price-legend">
     <span>Paper: <b>Rs 1</b> / printed sheet</span>
@@ -313,8 +295,22 @@
         <input type="tel" id="stuContact" placeholder="10-digit mobile number">
       </div>
       <div class="field">
+        <label>Email (required)</label>
+        <input type="email" id="stuEmail" placeholder="for order-ready notifications">
+      </div>
+      <div class="field">
         <label>Reg. No. (optional)</label>
         <input type="text" id="stuReg" placeholder="e.g. 2400040006">
+      </div>
+      <div class="field">
+        <label>Department</label>
+        <select id="stuDept">
+          <option value="ECE">ECE</option>
+          <option value="CSE">CSE</option>
+          <option value="AIDS">AIDS</option>
+          <option value="CSIT">CSIT</option>
+          <option value="Other">Other</option>
+        </select>
       </div>
       <div class="field">
         <label>I am a</label>
@@ -323,11 +319,23 @@
           <button type="button" class="toggle-btn" id="btnDay" onclick="setStuType('Day Scholar')">Day Scholar</button>
         </div>
       </div>
+
+      <div class="field" id="hostelSelectField">
+        <label>Hostel</label>
+        <select id="hostelSelect">
+          <option value="Ladies Hostel">1. Ladies Hostel</option>
+          <option value="Gents Hostel - Tulip">2. Gents Hostel - Tulip</option>
+          <option value="Gents Hostel - Aravali/Vindhya">3. Gents Hostel - Aravali/Vindhya</option>
+        </select>
+      </div>
       <div class="field" id="deliveryDetailField">
-        <label id="deliveryDetailLabel">Hostel Name &amp; Room No.</label>
-        <input type="text" id="deliveryDetail" placeholder="e.g. MB Hostel, Room 214">
+        <label id="deliveryDetailLabel">Room No.</label>
+        <input type="text" id="deliveryDetail" placeholder="e.g. Room 214">
         <div id="dayScholarNote" style="display:none;font-size:12px;color:var(--stamp);margin-top:6px;font-weight:600;">
-          Note: Day Scholar orders can only be picked up at the Main Gate. Turnaround time is up to 1.5 days.
+          Note: Day Scholar pickup is at 12:00 PM (lunch break) at the Main Gate, near the Security Office - inside the campus gate only.
+        </div>
+        <div id="hostlerNote" style="font-size:12px;color:var(--press);margin-top:6px;font-weight:600;">
+          Delivered to your hostel gate daily from 5:30 PM onward.
         </div>
       </div>
     </div>
@@ -352,6 +360,7 @@
   <section>
     <div class="custom-box">
       <div class="section-label">Not in the list?</div>
+      <p class="hint">We'll need the material for this course - your Order ID and course name will be flagged in the WhatsApp message so you can send us the PDF right after ordering.</p>
       <div class="custom-grid">
         <div class="field">
           <label>Course Name</label>
@@ -389,19 +398,13 @@
         <span id="itemCountLabel">0 line items</span>
       </div>
       <div class="cart-scroll">
-        <div id="cartBody">
-          <div class="empty-cart">No items added yet. Pick a course above to begin.</div>
-        </div>
+        <div id="cartBody"><div class="empty-cart">No items added yet. Pick a course above to begin.</div></div>
       </div>
       <div class="cart-total">
-        <div class="cart-total-row">
-          <span class="label">Total Payable</span>
-          <span class="amount" id="grandTotal">Rs 0</span>
-        </div>
-        <div class="advance-row">
-          <span>10% Advance Due Now</span>
-          <b id="advanceAmount">Rs 0</b>
-        </div>
+        <div class="cart-total-row"><span>Subtotal</span><span class="mono" id="subtotalAmount">Rs 0</span></div>
+        <div class="cart-total-row discount-row" id="discountRow" style="display:none;"><span>Bulk Discount (10% off service fee)</span><span class="mono" id="discountAmount">- Rs 0</span></div>
+        <div class="cart-total-row grand"><span class="label">Total Payable</span><span class="amount" id="grandTotal">Rs 0</span></div>
+        <div class="advance-row"><span>10% Advance Due Now</span><b id="advanceAmount">Rs 0</b></div>
         <div class="advance-note">
           A 10% advance is required to confirm your order (paid directly to the print desk, UPI ID:
           <b id="upiIdText">see WhatsApp message</b>). This protects against losses from last-minute order cancellations.
@@ -452,15 +455,12 @@
 
 <script>
 /* ============ CONFIG - EDIT THESE ============ */
-const SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwHko-hNsOuCocWTOwmQlMr2G9fWhieYVA4m7vyEZgnklX2zm0Oyt1XP8Mikxc-Bvu4/exec";
+const SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxcpA2XsQi4k6yJxHxslr3w9s3dzgg5nwyN3yk9qqHDQNEv_T0WJkT-QOZAakRJC1as/exec";
 const WHATSAPP_NUMBER  = "919390110070"; // country code + number, no + or spaces
 const UPI_ID = "9390110070-4@ibl"; // shown in the advance-payment note
+const FORM_SECRET = "klu-print-desk-2026"; // must match FORM_SECRET in Code.gs
 /* =============================================== */
 
-// Used only as a fallback if the live Catalogue sheet can't be reached
-// (e.g. SHEET_WEBAPP_URL not set yet, or a network error) - otherwise the
-// site fetches the current course list from the Google Sheet's Catalogue tab
-// on every load, so adding a course there shows up here automatically.
 const DEFAULT_CATALOGUE = [
   {code:"24AD3105", title:"Deep Learning Lab Workbook", pages:101},
   {code:"24CI3201", title:"Adaptive Software Engineering Lab Workbook", pages:176},
@@ -499,10 +499,11 @@ const DEFAULT_CATALOGUE = [
 
 const BIND_PRICE = { spiral:20, tape:10, book_hard:50, book_soft:30 };
 const BIND_LABEL = { spiral:"Spiral", tape:"Tape", book_hard:"Book Bind - Hard", book_soft:"Book Bind - Soft" };
-const SERVICE_FEE = 7; // per book, flat
+const SERVICE_FEE = 7;
+const BULK_DISCOUNT_THRESHOLD = 30;
 
 let stuType = "Hosteler";
-let cart = []; // {id, course, code, pages, sides, binding, qty}
+let cart = [];
 let cartId = 0;
 let isSubmitting = false;
 
@@ -515,16 +516,25 @@ function setStuType(t){
   stuType = t;
   document.getElementById('btnHostler').classList.toggle('active', t==='Hosteler');
   document.getElementById('btnDay').classList.toggle('active', t==='Day Scholar');
+  document.getElementById('hostelSelectField').style.display = t==='Hosteler' ? '' : 'none';
   document.getElementById('deliveryDetailLabel').textContent = t==='Hosteler'
-    ? "Hostel Name & Room No." : "Preferred Pickup Time (Main Gate only)";
+    ? "Room No." : "Any note for pickup (optional)";
   document.getElementById('deliveryDetail').placeholder = t==='Hosteler'
-    ? "e.g. MB Hostel, Room 214" : "e.g. After 4pm tomorrow";
+    ? "e.g. Room 214" : "e.g. will collect after class";
   document.getElementById('dayScholarNote').style.display = t==='Day Scholar' ? 'block' : 'none';
+  document.getElementById('hostlerNote').style.display = t==='Hosteler' ? 'block' : 'none';
 }
 
-function sheetsFor(pages, sides){
-  return sides === '2' ? Math.ceil(pages/2) : pages;
+function getDeliveryDetail(){
+  const room = document.getElementById('deliveryDetail').value.trim();
+  if(stuType === 'Hosteler'){
+    const hostel = document.getElementById('hostelSelect').value;
+    return hostel + (room ? (', Room ' + room) : '');
+  }
+  return room || 'Main Gate pickup';
 }
+
+function sheetsFor(pages, sides){ return sides === '2' ? Math.ceil(pages/2) : pages; }
 function lineCost(pages, sides, binding, qty){
   const sheets = sheetsFor(pages, sides);
   const printCost = sheets * 1 * qty;
@@ -536,7 +546,7 @@ function lineCost(pages, sides, binding, qty){
 function buildCourseGrid(catalogue){
   const grid = document.getElementById('courseGrid');
   grid.innerHTML = '';
-  catalogue.forEach((c, idx) => {
+  catalogue.forEach((c) => {
     const box = document.createElement('div');
     box.className = 'course-box';
     box.dataset.searchText = (c.code + ' ' + c.title).toLowerCase();
@@ -615,7 +625,7 @@ function applySearchFilter(){
 document.getElementById('courseSearch').addEventListener('input', applySearchFilter);
 
 function addToCart(course, code, pages, sides, binding, qty){
-  cart.push({ id: ++cartId, course, code, pages, sides, binding, qty });
+  cart.push({ id: ++cartId, course, code, pages, sides, binding, qty, custom: code === 'CUSTOM' });
   renderCart();
 }
 
@@ -636,26 +646,42 @@ function removeFromCart(id){
   renderCart();
 }
 
+function computeCartTotals(){
+  let printCost = 0, bindCost = 0, serviceFee = 0, totalQty = 0;
+  cart.forEach(item=>{
+    const c = lineCost(item.pages, item.sides, item.binding, item.qty);
+    printCost += c.printCost; bindCost += c.bindCost; serviceFee += c.serviceFee; totalQty += item.qty;
+  });
+  const subtotal = printCost + bindCost + serviceFee;
+  const bulkEligible = totalQty >= BULK_DISCOUNT_THRESHOLD;
+  const discount = bulkEligible ? Math.ceil(serviceFee * 0.1) : 0;
+  const grand = subtotal - discount;
+  const advance = Math.ceil(grand * 0.1);
+  return { printCost, bindCost, serviceFee, subtotal, totalQty, bulkEligible, discount, grand, advance };
+}
+
 function renderCart(){
   const body = document.getElementById('cartBody');
   document.getElementById('cartCountPill').textContent = cart.length + ' item' + (cart.length===1?'':'s') + ' in cart';
   document.getElementById('itemCountLabel').textContent = cart.length + ' line items';
+
   if(cart.length === 0){
     body.innerHTML = '<div class="empty-cart">No items added yet. Pick a course above to begin.</div>';
+    document.getElementById('subtotalAmount').textContent = 'Rs 0';
     document.getElementById('grandTotal').textContent = 'Rs 0';
     document.getElementById('advanceAmount').textContent = 'Rs 0';
+    document.getElementById('discountRow').style.display = 'none';
     return;
   }
-  let grand = 0;
+
   let rows = `<table class="cart-table"><thead><tr>
     <th>Code</th><th>Course</th><th>Pages</th><th>Side</th><th>Bind</th><th>Qty</th><th>Sheets</th><th>Amount</th><th></th>
   </tr></thead><tbody>`;
   cart.forEach(item=>{
     const c = lineCost(item.pages, item.sides, item.binding, item.qty);
-    grand += c.total;
     rows += `<tr>
-      <td>${item.code}</td>
-      <td>${item.course}</td>
+      <td>${item.custom ? 'NEW' : item.code}</td>
+      <td>${item.course}${item.custom ? ' <span style="color:var(--stamp);font-size:10.5px;font-weight:700;">(send PDF)</span>' : ''}</td>
       <td>${item.pages}</td>
       <td>${item.sides} Side</td>
       <td>${BIND_LABEL[item.binding]}</td>
@@ -667,8 +693,18 @@ function renderCart(){
   });
   rows += '</tbody></table>';
   body.innerHTML = rows;
-  document.getElementById('grandTotal').textContent = 'Rs ' + grand;
-  document.getElementById('advanceAmount').textContent = 'Rs ' + Math.ceil(grand * 0.1);
+
+  const t = computeCartTotals();
+  document.getElementById('subtotalAmount').textContent = 'Rs ' + t.subtotal;
+  document.getElementById('grandTotal').textContent = 'Rs ' + t.grand;
+  document.getElementById('advanceAmount').textContent = 'Rs ' + t.advance;
+  const discountRow = document.getElementById('discountRow');
+  if(t.bulkEligible){
+    discountRow.style.display = 'flex';
+    document.getElementById('discountAmount').textContent = '- Rs ' + t.discount;
+  } else {
+    discountRow.style.display = 'none';
+  }
 }
 
 function showMsg(text, ok){
@@ -677,23 +713,34 @@ function showMsg(text, ok){
   box.className = 'msg show ' + (ok ? 'ok' : 'err');
 }
 
-function buildWhatsAppText(orderId, name, contact, reg, type, deliveryDetail, grand, advance){
+function buildWhatsAppText(orderId, name, contact, reg, dept, type, deliveryDetail, t){
   let lines = [];
   lines.push('*NEW WORKBOOK ORDER*');
   lines.push('Order ID: ' + orderId);
   lines.push('Name: ' + name);
   lines.push('Contact: ' + contact);
   if(reg) lines.push('Reg No: ' + reg);
+  lines.push('Department: ' + dept);
   lines.push('Type: ' + type);
   lines.push('Delivery: ' + deliveryDetail);
+  lines.push('Total Books: ' + t.totalQty);
   lines.push('');
+  const customItems = [];
   cart.forEach((item, i)=>{
     const c = lineCost(item.pages, item.sides, item.binding, item.qty);
-    lines.push((i+1) + '. [' + item.code + '] ' + item.course + ' | ' + item.pages + 'pg | ' + item.sides + 'side | ' + BIND_LABEL[item.binding] + ' | Qty:' + item.qty + ' | Rs ' + c.total);
+    const flag = item.custom ? '  [NEW COURSE - NOT IN CATALOGUE]' : '';
+    lines.push((i+1) + '. [' + item.code + '] ' + item.course + ' | ' + item.pages + 'pg | ' + item.sides + 'side | ' + BIND_LABEL[item.binding] + ' | Qty:' + item.qty + ' | Rs ' + c.total + flag);
+    if(item.custom) customItems.push(item.course);
   });
   lines.push('');
-  lines.push('*TOTAL: Rs ' + grand + '*');
-  lines.push('*10% ADVANCE DUE NOW: Rs ' + advance + '*');
+  if(customItems.length > 0){
+    lines.push('*ACTION NEEDED:* Please send the PDF/material for: ' + customItems.join(', ') + ' - reply to this message with the file(s) for order ' + orderId + '.');
+    lines.push('');
+  }
+  lines.push('Subtotal: Rs ' + t.subtotal);
+  if(t.bulkEligible) lines.push('Bulk Discount (10% off service fee): - Rs ' + t.discount);
+  lines.push('*TOTAL: Rs ' + t.grand + '*');
+  lines.push('*10% ADVANCE DUE NOW: Rs ' + t.advance + '*');
   lines.push('');
   lines.push('Save your Order ID to track status on the site.');
   return lines.join('\n');
@@ -707,15 +754,17 @@ function fetchWithTimeout(url, options, ms){
 }
 
 async function submitOrder(){
-  if(isSubmitting) return; // guards against rapid double/multi taps
+  if(isSubmitting) return;
   const name = document.getElementById('stuName').value.trim();
   const contact = document.getElementById('stuContact').value.trim();
+  const email = document.getElementById('stuEmail').value.trim();
   const reg = document.getElementById('stuReg').value.trim();
-  const deliveryDetail = document.getElementById('deliveryDetail').value.trim();
+  const dept = document.getElementById('stuDept').value;
+  const deliveryDetail = getDeliveryDetail();
   const advanceAgreed = document.getElementById('advanceAgree').checked;
 
   if(!name || !contact){ showMsg('Please enter your name and contact number.', false); return; }
-  if(!deliveryDetail){ showMsg('Please enter your delivery detail.', false); return; }
+  if(!email || email.indexOf('@') === -1){ showMsg('Please enter a valid email - it is required for order-ready notifications.', false); return; }
   if(cart.length === 0){ showMsg('Please add at least one course to your cart.', false); return; }
   if(!advanceAgreed){ showMsg('Please tick the 10% advance payment checkbox to confirm your order.', false); return; }
 
@@ -723,29 +772,26 @@ async function submitOrder(){
   const btn = document.getElementById('submitBtn');
   btn.disabled = true; btn.textContent = 'Submitting... please wait';
 
-  let grand = 0;
+  const t = computeCartTotals();
   const items = cart.map(item=>{
     const c = lineCost(item.pages, item.sides, item.binding, item.qty);
-    grand += c.total;
     return {
       course: item.course, code: item.code, pages: item.pages, sides: item.sides + ' Side',
       binding: BIND_LABEL[item.binding], qty: item.qty, sheets: c.sheets * item.qty,
       printCost: c.printCost, bindCost: c.bindCost, serviceFee: c.serviceFee, lineTotal: c.total
     };
   });
-  const advance = Math.ceil(grand * 0.1);
 
   const payload = {
-    student: { name, contact, reg, type: stuType, deliveryDetail },
-    items, total: grand, advance
+    secret: FORM_SECRET,
+    student: { name, contact, email, reg, department: dept, type: stuType, deliveryDetail },
+    items, total: t.grand, advance: t.advance, bulkDiscount: t.discount
   };
 
   // Open a blank tab FIRST and synchronously (still inside the click handler,
-  // before any "await"). Browsers only allow window.open() to bypass the
-  // popup blocker when it runs as a direct result of the user's click. We
-  // navigate this tab to the real WhatsApp URL further below, once we know
-  // the server-generated Order ID - setting .location on an already-open
-  // window is allowed even after an await, unlike calling window.open() itself.
+  // before any "await") so the popup blocker doesn't stop it. We navigate
+  // this tab to the real WhatsApp URL once we know the server-generated
+  // Order ID.
   const waWin = window.open('', '_blank');
 
   let orderId = null;
@@ -766,7 +812,7 @@ async function submitOrder(){
     showMsg('Could not confirm with the sheet (it may still have saved) - WhatsApp message prepared without a confirmed Order ID. Please check with the print desk.', false);
   }
 
-  const text = buildWhatsAppText(orderId || 'PENDING', name, contact, reg, stuType, deliveryDetail, grand, advance);
+  const text = buildWhatsAppText(orderId || 'PENDING', name, contact, reg, dept, stuType, deliveryDetail, t);
   const waUrl = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(text);
   if(waWin) waWin.location = waUrl; else window.open(waUrl, '_blank');
 
@@ -803,16 +849,20 @@ async function trackOrder(){
     const url = SHEET_WEBAPP_URL + '?action=track&orderId=' + encodeURIComponent(orderId) + '&contact=' + encodeURIComponent(contact);
     const res = await fetchWithTimeout(url, {}, 8000);
     const data = await res.json();
-
     if(!data || !data.found){
       resultBox.innerHTML = '<div class="track-not-found">No matching order found. Double-check your Order ID and the phone number you ordered with.</div>';
       return;
     }
-
     renderTrackResult(data);
   }catch(err){
     resultBox.innerHTML = '<div class="track-not-found">Could not reach the tracking service right now. Please try again in a moment.</div>';
   }
+}
+
+function paymentPillClass(status){
+  if(status === 'Done') return 'done';
+  if(status === 'Partially Done') return 'partial';
+  return 'not-paid';
 }
 
 function renderTrackResult(data){
@@ -838,7 +888,9 @@ function renderTrackResult(data){
   });
 
   let itemsHtml = '';
+  let totalBooks = 0;
   (data.items || []).forEach(item=>{
+    totalBooks += Number(item.qty) || 0;
     itemsHtml += `<div style="display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:1px dashed var(--line);">
       <span>${item.course} (${item.sides}, ${item.binding}) x${item.qty}</span>
       <span class="mono">Rs ${item.lineTotal}</span>
@@ -851,11 +903,15 @@ function renderTrackResult(data){
       <div class="steps-track">${stepsHtml}</div>
       <div style="margin:10px 0;">${itemsHtml}</div>
       <div style="display:flex;justify-content:space-between;font-weight:700;padding-top:10px;">
-        <span>Total</span><span class="mono">Rs ${data.total}</span>
+        <span>Total (${totalBooks} books)</span><span class="mono">Rs ${data.total}</span>
       </div>
       <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink-soft);">
-        <span>Advance Due</span><span class="mono">Rs ${data.advance}</span>
+        <span>Paid so far</span><span class="mono">Rs ${data.paid || 0}</span>
       </div>
+      <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink-soft);">
+        <span>Balance Due</span><span class="mono">Rs ${data.balance}</span>
+      </div>
+      <div style="margin-top:10px;"><span class="pay-pill ${paymentPillClass(data.paymentStatus)}">${data.paymentStatus}</span></div>
       <div style="font-size:11.5px;color:var(--ink-soft);margin-top:10px;">Last updated: ${data.lastUpdated}</div>
     </div>`;
 }
@@ -869,31 +925,28 @@ async function loadCatalogueAndStart(){
     try {
       const res = await fetch(SHEET_WEBAPP_URL + '?action=catalogue');
       const data = await res.json();
-      if (Array.isArray(data) && data.length > 0) {
-        catalogue = data;
-      }
-    } catch (err) {
-      // Sheet unreachable - silently fall back to the built-in list below.
-    }
+      if (Array.isArray(data) && data.length > 0) catalogue = data;
+    } catch (err) { /* fall back silently */ }
   }
-
   buildCourseGrid(catalogue);
   renderCart();
+  setStuType('Hosteler');
 }
 
 async function loadTicker(){
   const track = document.getElementById('tickerTrack');
-  let total = 1300; // last semester's count, used until the sheet says otherwise
+  let total = 1300;
   if (SHEET_WEBAPP_URL && !SHEET_WEBAPP_URL.startsWith('PASTE_')) {
     try {
       const res = await fetch(SHEET_WEBAPP_URL + '?action=stats');
       const data = await res.json();
-      if (data && typeof data.totalDelivered === 'number' && data.totalDelivered > 0) {
-        total = data.totalDelivered;
-      }
+      if (data && typeof data.totalDelivered === 'number' && data.totalDelivered > 0) total = data.totalDelivered;
+      if (data && data.location) document.getElementById('locationText').textContent = data.location;
     } catch (err) {
-      // keep the fallback number above
+      document.getElementById('locationText').textContent = 'Location unavailable';
     }
+  } else {
+    document.getElementById('locationText').textContent = 'Location unavailable';
   }
   track.innerHTML = '<span>' + total.toLocaleString('en-IN') + '+ workbooks delivered and counting</span> Trusted by KLU students for fast, reliable workbook printing and binding. <span>' + total.toLocaleString('en-IN') + '+ workbooks delivered and counting</span> Trusted by KLU students for fast, reliable workbook printing and binding.';
 }

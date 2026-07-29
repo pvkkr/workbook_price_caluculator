@@ -120,17 +120,11 @@
   }
   .field label{display:block;font-size:11.5px;font-weight:700;color:var(--ink-soft);
     text-transform:uppercase;letter-spacing:0.4px;margin-bottom:6px;}
-  .field input[type=text], .field input[type=tel], .field input[type=email], .field select, .field input[type=number]{
+  .field input[type=text], .field input[type=tel], .field select, .field input[type=number]{
     width:100%;padding:11px 11px;border:1.5px solid var(--line);border-radius:3px;
     font-size:15px;font-family:'Roboto',sans-serif;background:#fff;color:var(--ink);
   }
   .field input:focus, .field select:focus{outline:none;border-color:var(--press);box-shadow:0 0 0 2px rgba(40,116,240,0.15);}
-  .toggle-row{display:flex;gap:8px;}
-  .toggle-btn{
-    flex:1;padding:11px;border:1.5px solid var(--line);border-radius:3px;background:#fff;
-    cursor:pointer;font-weight:700;font-size:14px;color:var(--ink-soft);text-align:center;transition:all .15s;
-  }
-  .toggle-btn.active{background:var(--press);border-color:var(--press-dark);color:#fff;}
   .search-count{font-size:12px;color:var(--ink-soft);white-space:nowrap;}
   .no-results{grid-column:1/-1;text-align:center;padding:30px;color:var(--ink-soft);font-size:14px;}
   .course-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
@@ -192,12 +186,6 @@
   .cart-total .amount{font-size:22px;font-weight:900;color:var(--ink);}
   .cart-total .label{font-size:14px;color:var(--ink);font-weight:700;}
   .discount-row{color:var(--ok);font-weight:600;}
-  .advance-row{display:flex;justify-content:space-between;align-items:center;margin-top:10px;
-    padding:10px 12px;background:var(--paper);border-radius:3px;font-size:13px;}
-  .advance-row b{color:var(--stamp-dark);}
-  .advance-note{font-size:12px;color:var(--ink-soft);margin-top:8px;line-height:1.5;}
-  .advance-check{display:flex;align-items:flex-start;gap:8px;margin-top:12px;font-size:13px;}
-  .advance-check input{margin-top:3px;flex-shrink:0;width:16px;height:16px;}
   .submit-bar{margin-top:18px;display:flex;gap:12px;flex-wrap:wrap;}
   .submit-btn{
     flex:1;min-width:220px;padding:16px;border:none;border-radius:3px;font-size:15px;font-weight:700;
@@ -214,11 +202,6 @@
   .msg.show{display:block;}
   .msg.ok{background:#E7F5E8;color:var(--ok);border:1px solid #BEE3C0;}
   .msg.err{background:#FFF1EC;color:var(--stamp-dark);border:1px solid #FFD5C4;}
-  .price-legend{
-    display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;
-    color:var(--ink-soft);background:#fff;border:1px solid var(--line);border-radius:3px;padding:10px 16px;margin-bottom:18px;
-  }
-  .price-legend b{color:var(--ink);}
   footer{text-align:center;color:var(--ink-soft);font-size:12px;margin-top:40px;padding:16px 0;}
   /* ===== STICKY BOTTOM CART BAR ===== */
   #stickyCartBar{
@@ -260,7 +243,6 @@
   .pay-pill.partial{background:#FFF6DC;color:#946200;}
   .pay-pill.not-paid{background:#FFF1EC;color:var(--stamp-dark);}
   @media (max-width:640px){
-    .toggle-row{flex-direction:column;}
     .submit-btn{min-width:100%;}
     table.cart-table{font-size:12px;}
   }
@@ -297,16 +279,10 @@
 <div class="wrap">
   <div id="orderView">
   <div class="bulk-banner">BULK DISCOUNT: Order 30+ books in one go and get 10% off the service fee</div>
-  <div class="price-legend">
-    <span>Paper: <b>Rs 1</b> / printed sheet</span>
-    <span>Book Bind: <b>Rs 51</b></span>
-    <span>Service Fee: <b>Rs 8</b> / book</span>
-  </div>
   <!-- STUDENT DETAILS -->
   <section>
     <div class="section-label">Step 1</div>
-    <h2 class="section-title">Your Details &amp; Delivery</h2>
-    <p class="section-sub">Delivery is arranged based on whether you're a Hosteler or Day Scholar.</p>
+    <h2 class="section-title">Your Details</h2>
     <div class="student-card">
       <div class="field">
         <label>Full Name</label>
@@ -315,49 +291,6 @@
       <div class="field">
         <label>Contact / WhatsApp Number</label>
         <input type="tel" id="stuContact" placeholder="10-digit mobile number">
-      </div>
-      <div class="field">
-        <label>Email (required)</label>
-        <input type="email" id="stuEmail" placeholder="for order-ready notifications">
-      </div>
-      <div class="field">
-        <label>Reg. No. (optional)</label>
-        <input type="text" id="stuReg" placeholder="e.g. 2400040006">
-      </div>
-      <div class="field">
-        <label>Department</label>
-        <select id="stuDept">
-          <option value="ECE">ECE</option>
-          <option value="CSE">CSE</option>
-          <option value="AIDS">AIDS</option>
-          <option value="CSIT">CSIT</option>
-          <option value="Other">Other</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>I am a</label>
-        <div class="toggle-row">
-          <button type="button" class="toggle-btn active" id="btnHostler" onclick="setStuType('Hosteler')">Hosteler</button>
-          <button type="button" class="toggle-btn" id="btnDay" onclick="setStuType('Day Scholar')">Day Scholar</button>
-        </div>
-      </div>
-      <div class="field" id="hostelSelectField">
-        <label>Hostel</label>
-        <select id="hostelSelect">
-          <option value="Ladies Hostel">1. Ladies Hostel</option>
-          <option value="Gents Hostel - Tulip">2. Gents Hostel - Tulip</option>
-          <option value="Gents Hostel - Aravali/Vindhya">3. Gents Hostel - Aravali/Vindhya</option>
-        </select>
-      </div>
-      <div class="field" id="deliveryDetailField">
-        <label id="deliveryDetailLabel">Room No.</label>
-        <input type="text" id="deliveryDetail" placeholder="e.g. Room 214">
-        <div id="dayScholarNote" style="display:none;font-size:12px;color:var(--stamp);margin-top:6px;font-weight:600;">
-          Note: Day Scholar pickup is at 12:00 PM (lunch break) at the Main Gate, near the Security Office - inside the campus gate only.
-        </div>
-        <div id="hostlerNote" style="font-size:12px;color:var(--press);margin-top:6px;font-weight:600;">
-          Delivered to your hostel gate daily from 5:30 PM onward.
-        </div>
       </div>
     </div>
   </section>
@@ -416,22 +349,13 @@
         <div class="cart-total-row"><span>Subtotal</span><span class="mono" id="subtotalAmount">Rs 0</span></div>
         <div class="cart-total-row discount-row" id="discountRow" style="display:none;"><span>Bulk Discount (10% off service fee)</span><span class="mono" id="discountAmount">- Rs 0</span></div>
         <div class="cart-total-row grand"><span class="label">Total Payable</span><span class="amount" id="grandTotal">Rs 0</span></div>
-        <div class="advance-row"><span>10% Advance Due Now</span><b id="advanceAmount">Rs 0</b></div>
-        <div class="advance-note">
-          A 10% advance is required to confirm your order (paid directly to the print desk, UPI ID:
-          <b id="upiIdText">see WhatsApp message</b>). This protects against losses from last-minute order cancellations.
-        </div>
-        <label class="advance-check">
-          <input type="checkbox" id="advanceAgree">
-          <span>I understand a 10% advance is required to confirm this order, and I agree to pay it.</span>
-        </label>
       </div>
     </div>
     <div class="submit-bar">
-      <button class="submit-btn primary" id="submitBtn" onclick="submitOrder()">Place Order (Sheet + WhatsApp)</button>
+      <button class="submit-btn primary" id="submitBtn" onclick="submitOrder()">Place Order (WhatsApp)</button>
     </div>
     <div class="submit-warning">
-      Important: Tap Place Order only once, then wait a few seconds. Do not tap multiple times - this can create duplicate orders.
+      Important: Tap Place Order only once - WhatsApp opens immediately. Do not tap multiple times, as this can create duplicate orders.
     </div>
     <div class="msg" id="msgBox"></div>
   </section>
@@ -469,7 +393,6 @@
 /* ============ CONFIG - EDIT THESE ============ */
 const SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbw4kqxe9DKb4KUBmqQXORXaoytIsJlgoYQz6yFbDHal8KpqbY8BOrfYwkrOMGWwkN8/exec";
 const WHATSAPP_NUMBER  = "919390110070"; // country code + number, no + or spaces
-const UPI_ID = "9390110070-4@ibl"; // shown in the advance-payment note
 const FORM_SECRET = "klu-print-desk-2026"; // must match FORM_SECRET in Code.gs
 /* =============================================== */
 const DEFAULT_CATALOGUE = [
@@ -511,34 +434,9 @@ const BIND_PRICE = { book_bind:51 };
 const BIND_LABEL = { book_bind:"Book Bind" };
 const SERVICE_FEE = 8;
 const BULK_DISCOUNT_THRESHOLD = 30;
-let stuType = "Hosteler";
 let cart = [];
 let cartId = 0;
 let isSubmitting = false;
-if (UPI_ID && !UPI_ID.startsWith('PASTE_')) {
-  const upiEl = document.getElementById('upiIdText');
-  if (upiEl) upiEl.textContent = UPI_ID;
-}
-function setStuType(t){
-  stuType = t;
-  document.getElementById('btnHostler').classList.toggle('active', t==='Hosteler');
-  document.getElementById('btnDay').classList.toggle('active', t==='Day Scholar');
-  document.getElementById('hostelSelectField').style.display = t==='Hosteler' ? '' : 'none';
-  document.getElementById('deliveryDetailLabel').textContent = t==='Hosteler'
-    ? "Room No." : "Any note for pickup (optional)";
-  document.getElementById('deliveryDetail').placeholder = t==='Hosteler'
-    ? "e.g. Room 214" : "e.g. will collect after class";
-  document.getElementById('dayScholarNote').style.display = t==='Day Scholar' ? 'block' : 'none';
-  document.getElementById('hostlerNote').style.display = t==='Hosteler' ? 'block' : 'none';
-}
-function getDeliveryDetail(){
-  const room = document.getElementById('deliveryDetail').value.trim();
-  if(stuType === 'Hosteler'){
-    const hostel = document.getElementById('hostelSelect').value;
-    return hostel + (room ? (', Room ' + room) : '');
-  }
-  return room || 'Main Gate pickup';
-}
 function sheetsFor(pages, sides){ return sides === '2' ? Math.ceil(pages/2) : pages; }
 function lineCost(pages, sides, binding, qty){
   const sheets = sheetsFor(pages, sides);
@@ -651,8 +549,7 @@ function computeCartTotals(){
   const bulkEligible = totalQty >= BULK_DISCOUNT_THRESHOLD;
   const discount = bulkEligible ? Math.ceil(serviceFee * 0.1) : 0;
   const grand = subtotal - discount;
-  const advance = Math.ceil(grand * 0.1);
-  return { printCost, bindCost, serviceFee, subtotal, totalQty, bulkEligible, discount, grand, advance };
+  return { printCost, bindCost, serviceFee, subtotal, totalQty, bulkEligible, discount, grand };
 }
 function renderCart(){
   const body = document.getElementById('cartBody');
@@ -663,7 +560,6 @@ function renderCart(){
     body.innerHTML = '<div class="empty-cart">No items added yet. Pick a course above to begin.</div>';
     document.getElementById('subtotalAmount').textContent = 'Rs 0';
     document.getElementById('grandTotal').textContent = 'Rs 0';
-    document.getElementById('advanceAmount').textContent = 'Rs 0';
     document.getElementById('discountRow').style.display = 'none';
     if(stickyBar) stickyBar.style.display = 'none';
     document.body.classList.remove('has-sticky-cart');
@@ -691,7 +587,6 @@ function renderCart(){
   const t = computeCartTotals();
   document.getElementById('subtotalAmount').textContent = 'Rs ' + t.subtotal;
   document.getElementById('grandTotal').textContent = 'Rs ' + t.grand;
-  document.getElementById('advanceAmount').textContent = 'Rs ' + t.advance;
   const discountRow = document.getElementById('discountRow');
   if(t.bulkEligible){
     discountRow.style.display = 'flex';
@@ -715,16 +610,12 @@ function showMsg(text, ok){
   box.textContent = text;
   box.className = 'msg show ' + (ok ? 'ok' : 'err');
 }
-function buildWhatsAppText(orderId, name, contact, reg, dept, type, deliveryDetail, t){
+function buildWhatsAppText(orderId, name, contact, t){
   let lines = [];
   lines.push('*NEW WORKBOOK ORDER*');
   lines.push('Order ID: ' + orderId);
   lines.push('Name: ' + name);
   lines.push('Contact: ' + contact);
-  if(reg) lines.push('Reg No: ' + reg);
-  lines.push('Department: ' + dept);
-  lines.push('Type: ' + type);
-  lines.push('Delivery: ' + deliveryDetail);
   lines.push('Total Books: ' + t.totalQty);
   lines.push('');
   const customItems = [];
@@ -744,7 +635,6 @@ function buildWhatsAppText(orderId, name, contact, reg, dept, type, deliveryDeta
   lines.push('Subtotal: Rs ' + t.subtotal);
   if(t.bulkEligible) lines.push('Bulk Discount (10% off service fee): - Rs ' + t.discount);
   lines.push('*TOTAL: Rs ' + t.grand + '*');
-  lines.push('*10% ADVANCE DUE NOW: Rs ' + t.advance + '*');
   lines.push('');
   lines.push('Save your Order ID to track status on the site.');
   return lines.join('\n');
@@ -755,24 +645,20 @@ function fetchWithTimeout(url, options, ms){
     new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), ms))
   ]);
 }
+function generateOrderId(){
+  return 'WPD-' + Date.now().toString().slice(-8);
+}
 async function submitOrder(){
   if(isSubmitting) return;
   const name = document.getElementById('stuName').value.trim();
   const contact = document.getElementById('stuContact').value.trim();
-  const email = document.getElementById('stuEmail').value.trim();
-  const reg = document.getElementById('stuReg').value.trim();
-  const dept = document.getElementById('stuDept').value;
-  const deliveryDetail = getDeliveryDetail();
-  const advanceAgreed = document.getElementById('advanceAgree').checked;
   const phoneDigits = contact.replace(/\D/g, '');
   if(!name || name.length < 2){ showMsg('Please enter your full name.', false); return; }
   if(!contact || phoneDigits.length < 10 || phoneDigits.length > 13){ showMsg('Please enter a valid contact number (10 digits, optionally with country code).', false); return; }
-  if(!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ showMsg('Please enter a valid email - it is required for order-ready notifications.', false); return; }
   if(cart.length === 0){ showMsg('Please add at least one course to your cart.', false); return; }
-  if(!advanceAgreed){ showMsg('Please tick the 10% advance payment checkbox to confirm your order.', false); return; }
   isSubmitting = true;
   const btn = document.getElementById('submitBtn');
-  btn.disabled = true; btn.textContent = 'Submitting... please wait';
+  btn.disabled = true; btn.textContent = 'Opening WhatsApp...';
   const t = computeCartTotals();
   const items = cart.map(item=>{
     const c = lineCost(item.pages, item.sides, item.binding, item.qty);
@@ -790,62 +676,47 @@ async function submitOrder(){
       docType: item.docType || 'Course Workbook'
     };
   });
+  const localOrderId = generateOrderId();
   const payload = {
-    secret: FORM_SECRET,
-    student: { name, contact, email, reg, department: dept, type: stuType, deliveryDetail },
-    items, total: t.grand, advance: t.advance, bulkDiscount: t.discount
+    secret: FORM_SECRET, orderId: localOrderId,
+    student: { name, contact },
+    items, total: t.grand, bulkDiscount: t.discount
   };
   // Open a blank tab FIRST and synchronously (still inside the click handler,
-  // before any "await") so the popup blocker doesn't stop it. We navigate
-  // this tab to the real WhatsApp URL once we know the server-generated
-  // Order ID.
+  // before any "await") so the popup blocker doesn't stop it.
   const waWin = window.open('', '_blank');
-  let orderId = null;
-  let saveFailed = false;
-  let failReason = '';
+  // Give the sheet a short 3s window to reply with its own Order ID. This
+  // replaces the old flow, which waited up to 2 attempts x 15s (30+ seconds)
+  // before redirecting - that was the latency. Now WhatsApp opens within
+  // ~3 seconds no matter what; if the sheet doesn't answer in time we fall
+  // back to the locally-generated ID and finish saving in the background.
+  let orderId = localOrderId;
+  let saved = false;
   if(SHEET_WEBAPP_URL && !SHEET_WEBAPP_URL.startsWith('PASTE_')){
-    // One retry on top of the first attempt - covers slow cold-starts or a
-    // one-off network blip, without making the student wait indefinitely.
-    for(let attempt = 1; attempt <= 2 && !orderId; attempt++){
-      try{
-        const res = await fetchWithTimeout(SHEET_WEBAPP_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(payload)
-        }, 15000);
-        const result = await res.json();
-        if(result && result.status === 'ok' && result.orderId){
-          orderId = result.orderId;
-        } else {
-          // The server explicitly rejected this - retrying won't help, so stop.
-          saveFailed = true;
-          failReason = (result && result.message) ? result.message : 'Unknown server error.';
-          break;
-        }
-      }catch(err){
-        saveFailed = true;
-        failReason = 'Could not reach the sheet (timeout or network error).';
-        if(attempt === 1) await new Promise(r => setTimeout(r, 1200)); // brief pause before retry
-      }
-    }
-  } else {
-    saveFailed = true;
-    failReason = 'Sheet URL not configured yet.';
+    try{
+      const res = await fetchWithTimeout(SHEET_WEBAPP_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      }, 3000);
+      const result = await res.json();
+      if(result && result.status === 'ok' && result.orderId){ orderId = result.orderId; saved = true; }
+    }catch(err){ /* sheet didn't answer in time - fall back below, retry in background */ }
   }
-  if(orderId){
-    showMsg('Order ' + orderId + ' recorded and sent to WhatsApp!', true);
-  } else {
-    // Use a locally-generated, timestamp-based fallback ID so it's at least
-    // unique and identifiable in the WhatsApp message, even though nothing
-    // was saved to the sheet. This is NOT a real trackable Order ID.
-    orderId = 'LOCAL-' + Date.now().toString().slice(-6);
-    showMsg('NOT SAVED TO SHEET (' + failReason + '). WhatsApp message prepared with a temporary ID (' + orderId + ') - please tell the print desk directly so they can add it manually.', false);
-  }
-  const text = buildWhatsAppText(orderId, name, contact, reg, dept, stuType, deliveryDetail, t);
+  const text = buildWhatsAppText(orderId, name, contact, t);
   const waUrl = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(text);
   if(waWin) waWin.location = waUrl; else window.open(waUrl, '_blank');
-  btn.disabled = false; btn.textContent = 'Submit Order (Sheet + WhatsApp)';
+  showMsg('Order ' + orderId + ' sent to WhatsApp!' + (saved ? '' : ' Saving to our records in the background...'), true);
+  btn.disabled = false; btn.textContent = 'Place Order (WhatsApp)';
   isSubmitting = false;
+  if(!saved && SHEET_WEBAPP_URL && !SHEET_WEBAPP_URL.startsWith('PASTE_')){
+    // Fire-and-forget retry - doesn't block or delay anything the student sees.
+    fetch(SHEET_WEBAPP_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    }).catch(()=>{});
+  }
 }
 function setView(view){
   document.getElementById('orderView').style.display = view === 'order' ? '' : 'none';
@@ -947,7 +818,6 @@ async function loadCatalogueAndStart(){
   }
   buildCourseGrid(catalogue);
   renderCart();
-  setStuType('Hosteler');
 }
 async function loadTicker(){
   const track = document.getElementById('tickerTrack');

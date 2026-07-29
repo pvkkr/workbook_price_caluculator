@@ -372,7 +372,7 @@
   <section>
     <div class="custom-box">
       <div class="section-label">Course not listed? Or need a report printed?</div>
-      <p class="hint">Project reports, internship reports, seminar reports - anything not in the catalogue works here too. We'll need the file - your Order ID and item name will be flagged in the WhatsApp message so you can upload the PDF to our Drive folder right after ordering.</p>
+      <p class="hint">Project reports, internship reports, seminar reports - anything not in the catalogue works here too. We'll need the file - your Order ID and item name will be flagged in the WhatsApp message, just DM us the PDF directly on WhatsApp right after ordering.</p>
       <div class="custom-grid">
         <div class="field">
           <label>Document Type</label>
@@ -471,7 +471,6 @@ const SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbw4kqxe9DKb4KU
 const WHATSAPP_NUMBER  = "919390110070"; // country code + number, no + or spaces
 const UPI_ID = "9390110070-4@ibl"; // shown in the advance-payment note
 const FORM_SECRET = "klu-print-desk-2026"; // must match FORM_SECRET in Code.gs
-const CUSTOM_COURSE_DRIVE_LINK = "https://drive.google.com/drive/folders/1PQ9wr0F1-RtAS6UnsaK9CtdhtpY8ivWA"; // where students upload PDFs for courses not in the catalogue
 /* =============================================== */
 const DEFAULT_CATALOGUE = [
   {code:"24AD3105", title:"Deep Learning Lab Workbook", pages:101},
@@ -737,10 +736,9 @@ function buildWhatsAppText(orderId, name, contact, reg, dept, type, deliveryDeta
   });
   lines.push('');
   if(customItems.length > 0){
-    lines.push('*ACTION NEEDED:* The following item(s) need the file uploaded:');
+    lines.push('*ACTION NEEDED:* Please DM the PDF for the following item(s) directly on WhatsApp:');
     customItems.forEach(ci => lines.push('- ' + ci));
-    lines.push('Please upload the PDF here: ' + CUSTOM_COURSE_DRIVE_LINK);
-    lines.push('(Name the file with your Order ID ' + orderId + ' and the title above so it can be matched.)');
+    lines.push('(Send it right after this message, with your Order ID ' + orderId + ', so it can be matched.)');
     lines.push('');
   }
   lines.push('Subtotal: Rs ' + t.subtotal);

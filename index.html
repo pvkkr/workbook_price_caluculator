@@ -395,7 +395,7 @@
 </div>
 <script>
 /* ============ CONFIG - EDIT THESE ============ */
-const SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyx2gHkQSnF97nyAhVxjfyS_Uuo9VSkvrUTezpNShMzyKbLU71SCOn1m3znRpnB-m-z/exec";
+const SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzgvRfuzWqqhuixL3PboioESPdDiVSsGz-pIahmCEoihge2L30HjxvD6xrI8skL8lH4/exec";
 const WHATSAPP_NUMBER  = "919390110070"; // country code + number, no + or spaces
 const FORM_SECRET = "klu-print-desk-2026"; // must match FORM_SECRET in Code.gs
 /* =============================================== */
@@ -434,9 +434,10 @@ const DEFAULT_CATALOGUE = [
   {code:"24EC08HF", title:"AI FOR EMBEDDED SYSTEMS", pages:78},
   {code:"24DLA3303EF", title:"SMART CONTRACTS & WEB3 APPLICATION ENGINEERING", pages:94}
 ];
-const BIND_PRICE = { book_bind:51 };
+let PAPER_PRICE = 1; // Rs per printed sheet - overridable via Config sheet "Paper Price"
+const BIND_PRICE = { book_bind:51 }; // Rs per book - "book_bind" overridable via Config sheet "Bind Price"
 const BIND_LABEL = { book_bind:"Book Bind" };
-const SERVICE_FEE = 8;
+let SERVICE_FEE = 8; // Rs per book - overridable via Config sheet "Service Fee"
 const BULK_DISCOUNT_THRESHOLD = 30;
 let cart = [];
 let cartId = 0;
@@ -451,7 +452,7 @@ function lineCost(pages, sides, binding, qty, manualPrice){
     const total = manualPrice * qty;
     return { sheets, printCost: total, bindCost: 0, serviceFee: 0, total };
   }
-  const printCost = sheets * 1 * qty;
+  const printCost = sheets * PAPER_PRICE * qty;
   const bindCost = BIND_PRICE[binding] * qty;
   const serviceFee = SERVICE_FEE * qty;
   return { sheets, printCost, bindCost, serviceFee, total: printCost + bindCost + serviceFee };
@@ -818,39 +819,50 @@ function renderTrackResult(data){
       <div style="font-size:11.5px;color:var(--ink-soft);margin-top:10px;">Last updated: ${data.lastUpdated}</div>
     </div>`;
 }
-async function loadCatalogueAndStart(){
+async function initSite(){
   const grid = document.getElementById('courseGrid');
   grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--ink-soft);">Loading courses...</div>';
+
   let catalogue = DEFAULT_CATALOGUE;
+  let statsData = null;
+
   if (SHEET_WEBAPP_URL && !SHEET_WEBAPP_URL.startsWith('PASTE_')) {
-    try {
-      const res = await fetch(SHEET_WEBAPP_URL + '?action=catalogue');
-      const data = await res.json();
-      if (Array.isArray(data) && data.length > 0) catalogue = data;
-    } catch (err) { /* fall back silently */ }
+    const [catResult, statsResult] = await Promise.allSettled([
+      fetch(SHEET_WEBAPP_URL + '?action=catalogue').then(r => r.json()),
+      fetch(SHEET_WEBAPP_URL + '?action=stats').then(r => r.json())
+    ]);
+    if (catResult.status === 'fulfilled' && Array.isArray(catResult.value) && catResult.value.length > 0) {
+      catalogue = catResult.value;
+    }
+    if (statsResult.status === 'fulfilled') {
+      statsData = statsResult.value;
+    }
   }
+
+  // Apply any sheet-configured pricing BEFORE building the course cards, so
+  // the very first render already reflects the right prices instead of
+  // flashing the defaults first.
+  if (statsData) {
+    if (typeof statsData.paperPrice === 'number' && statsData.paperPrice > 0) PAPER_PRICE = statsData.paperPrice;
+    if (typeof statsData.bindPrice === 'number' && statsData.bindPrice > 0) BIND_PRICE.book_bind = statsData.bindPrice;
+    if (typeof statsData.serviceFee === 'number' && statsData.serviceFee >= 0) SERVICE_FEE = statsData.serviceFee;
+  }
+
   buildCourseGrid(catalogue);
   renderCart();
-}
-async function loadTicker(){
+
+  // Ticker + live-location badge
   const track = document.getElementById('tickerTrack');
   let total = 1300;
-  if (SHEET_WEBAPP_URL && !SHEET_WEBAPP_URL.startsWith('PASTE_')) {
-    try {
-      const res = await fetch(SHEET_WEBAPP_URL + '?action=stats');
-      const data = await res.json();
-      if (data && typeof data.totalDelivered === 'number' && data.totalDelivered > 0) total = data.totalDelivered;
-      if (data && data.location) document.getElementById('locationText').textContent = data.location;
-    } catch (err) {
-      document.getElementById('locationText').textContent = 'Location unavailable';
-    }
+  if (statsData && typeof statsData.totalDelivered === 'number' && statsData.totalDelivered > 0) total = statsData.totalDelivered;
+  if (statsData && statsData.location) {
+    document.getElementById('locationText').textContent = statsData.location;
   } else {
     document.getElementById('locationText').textContent = 'Location unavailable';
   }
   track.innerHTML = '<span>' + total.toLocaleString('en-IN') + '+ workbooks delivered and counting</span> Trusted by KLU students for fast, reliable workbook printing and binding. <span>' + total.toLocaleString('en-IN') + '+ workbooks delivered and counting</span> Trusted by KLU students for fast, reliable workbook printing and binding.';
 }
-loadCatalogueAndStart();
-loadTicker();
+initSite();
 </script>
 </body>
 </html>

@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --paper:#F1F3F6; 
+    --paper:#F1F3F6;
     --paper-dark:#E8EAF0;
     --ink:#212121;
     --ink-soft:#767676;
@@ -242,7 +242,9 @@
   }
   .course-box .code{font-size:11px;color:var(--ink-soft);font-weight:600;letter-spacing:0.3px;text-transform:uppercase;}
   .course-box .title{font-size:15.5px;font-weight:700;line-height:1.32;min-height:40px;color:var(--ink);}
-  .course-box .pages{font-size:12.5px;color:var(--ink-soft);display:flex;align-items:center;gap:5px;}
+  .course-box .pages{font-size:12.5px;color:var(--ink-soft);display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
+  .view-pdf-link{color:var(--press);font-weight:700;text-decoration:none;font-size:12px;white-space:nowrap;}
+  .view-pdf-link:hover{text-decoration:underline;}
   .opt-row{display:flex;gap:6px;}
   .opt-btn{
     flex:1;padding:9px 4px;font-size:12.5px;border:1.3px solid var(--line);border-radius:var(--radius-sm);background:#fff;
@@ -886,7 +888,7 @@ function buildCourseGrid(catalogue){
       </div>
       <div class="code">${c.code}</div>
       <div class="title">${c.title}</div>
-      <div class="pages">${c.pages} pages</div>
+      <div class="pages">${c.pages} pages${c.driveLink ? ' <a href="' + c.driveLink + '" target="_blank" rel="noopener" class="view-pdf-link">&#128065; View PDF</a>' : ''}</div>
       <div class="opt-row" data-role="sides">
         <div class="opt-btn active" data-val="1">1 Side</div>
         <div class="opt-btn" data-val="2">2 Side</div>

@@ -162,7 +162,7 @@
   .custom-box{background:#fff;border:1.5px dashed var(--press);border-radius:3px;padding:18px;}
   .custom-box .section-label{margin-bottom:12px;}
   .custom-box .hint{font-size:12px;color:var(--stamp-dark);margin-bottom:12px;}
-  .custom-grid{display:grid;grid-template-columns:1.1fr 1.8fr 0.8fr 0.9fr auto;gap:10px;align-items:end;}
+  .custom-grid{display:grid;grid-template-columns:1.1fr 1.8fr 0.8fr 0.9fr 0.7fr auto;gap:10px;align-items:end;}
   @media (max-width:980px){.custom-grid{grid-template-columns:1fr 1fr 1fr;}}
   @media (max-width:820px){.custom-grid{grid-template-columns:1fr 1fr;}}
   .custom-box .add-btn{padding:12px 18px;}
@@ -329,6 +329,10 @@
           <label>Print Side</label>
           <select id="customSides"><option value="1">1 Side</option><option value="2">2 Side</option></select>
         </div>
+        <div class="field">
+          <label>Qty</label>
+          <input type="number" id="customQty" min="1" max="100" value="1">
+        </div>
         <button class="add-btn" onclick="addCustom()">ADD TO CART</button>
       </div>
     </div>
@@ -391,7 +395,7 @@
 </div>
 <script>
 /* ============ CONFIG - EDIT THESE ============ */
-const SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwTq_yaaZmACy3u41lo2BiX_IvPo_IC5pYUqNqnvEy5fBcX6IchYWUkyZO_J1gAeZFY/exec";
+const SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyx2gHkQSnF97nyAhVxjfyS_Uuo9VSkvrUTezpNShMzyKbLU71SCOn1m3znRpnB-m-z/exec";
 const WHATSAPP_NUMBER  = "919390110070"; // country code + number, no + or spaces
 const FORM_SECRET = "klu-print-desk-2026"; // must match FORM_SECRET in Code.gs
 /* =============================================== */
@@ -438,8 +442,15 @@ let cart = [];
 let cartId = 0;
 let isSubmitting = false;
 function sheetsFor(pages, sides){ return sides === '2' ? Math.ceil(pages/2) : pages; }
-function lineCost(pages, sides, binding, qty){
+function lineCost(pages, sides, binding, qty, manualPrice){
   const sheets = sheetsFor(pages, sides);
+  // A course can carry a fixed manual price (set in the Catalogue sheet's
+  // optional "price" column) that overrides the standard paper+bind+fee
+  // formula entirely.
+  if(manualPrice && manualPrice > 0){
+    const total = manualPrice * qty;
+    return { sheets, printCost: total, bindCost: 0, serviceFee: 0, total };
+  }
   const printCost = sheets * 1 * qty;
   const bindCost = BIND_PRICE[binding] * qty;
   const serviceFee = SERVICE_FEE * qty;
@@ -467,7 +478,7 @@ function buildCourseGrid(catalogue){
         <label style="font-size:12px;color:var(--ink-soft);">Qty</label>
         <input type="number" min="1" value="1" data-role="qty">
       </div>
-      <div class="price-preview" data-role="preview">~ Rs ${lineCost(c.pages,'1','book_bind',1).total}</div>
+      <div class="price-preview" data-role="preview">~ Rs ${lineCost(c.pages,'1','book_bind',1,c.price).total}</div>
       <button class="add-btn">ADD TO CART</button>
     `;
     const sidesRow = box.querySelector('[data-role="sides"]');
@@ -476,7 +487,7 @@ function buildCourseGrid(catalogue){
     function currentSides(){ return sidesRow.querySelector('.active').dataset.val; }
     function updatePreview(){
       const qty = Math.max(1, parseInt(qtyInput.value)||1);
-      preview.textContent = '~ Rs ' + lineCost(c.pages, currentSides(), 'book_bind', qty).total;
+      preview.textContent = '~ Rs ' + lineCost(c.pages, currentSides(), 'book_bind', qty, c.price).total;
     }
     sidesRow.querySelectorAll('.opt-btn').forEach(btn=>{
       btn.onclick = ()=>{ sidesRow.querySelectorAll('.opt-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); updatePreview(); };
@@ -485,7 +496,7 @@ function buildCourseGrid(catalogue){
     box.querySelector('.add-btn').onclick = ()=>{
       const qty = Math.min(100, Math.max(1, parseInt(qtyInput.value)||1));
       if(qty !== (parseInt(qtyInput.value)||1)) qtyInput.value = qty;
-      addToCart(c.title, c.code, c.pages, currentSides(), 'book_bind', qty, 'Course Workbook');
+      addToCart(c.title, c.code, c.pages, currentSides(), 'book_bind', qty, 'Course Workbook', c.price);
     };
     grid.appendChild(box);
   });
@@ -518,8 +529,8 @@ function applySearchFilter(){
   document.getElementById('searchCount').textContent = q ? (visible + ' course' + (visible===1?'':'s') + ' found') : '';
 }
 document.getElementById('courseSearch').addEventListener('input', applySearchFilter);
-function addToCart(course, code, pages, sides, binding, qty, docType){
-  cart.push({ id: ++cartId, course, code, pages, sides, binding, qty, custom: code === 'CUSTOM', docType: docType || 'Course Workbook' });
+function addToCart(course, code, pages, sides, binding, qty, docType, manualPrice){
+  cart.push({ id: ++cartId, course, code, pages, sides, binding, qty, custom: code === 'CUSTOM', docType: docType || 'Course Workbook', price: manualPrice || 0 });
   renderCart();
 }
 function addCustom(){
@@ -528,12 +539,14 @@ function addCustom(){
   const pages = parseInt(document.getElementById('customPages').value);
   const sides = document.getElementById('customSides').value;
   const binding = 'book_bind';
+  const qty = Math.min(100, Math.max(1, parseInt(document.getElementById('customQty').value) || 1));
   if(!name){ alert('Please type the title/course name.'); return; }
   if(name.length > 120){ alert('That title is too long - please shorten it to under 120 characters.'); return; }
   if(!pages || pages < 1 || pages > 3000){ alert('Please enter a valid page count (1-3000).'); return; }
-  addToCart(name, 'CUSTOM', pages, sides, binding, 1, docType);
+  addToCart(name, 'CUSTOM', pages, sides, binding, qty, docType, 0);
   document.getElementById('customName').value = '';
   document.getElementById('customPages').value = '';
+  document.getElementById('customQty').value = '1';
 }
 function removeFromCart(id){
   cart = cart.filter(i=>i.id !== id);
@@ -542,7 +555,7 @@ function removeFromCart(id){
 function computeCartTotals(){
   let printCost = 0, bindCost = 0, serviceFee = 0, totalQty = 0;
   cart.forEach(item=>{
-    const c = lineCost(item.pages, item.sides, item.binding, item.qty);
+    const c = lineCost(item.pages, item.sides, item.binding, item.qty, item.price);
     printCost += c.printCost; bindCost += c.bindCost; serviceFee += c.serviceFee; totalQty += item.qty;
   });
   const subtotal = printCost + bindCost + serviceFee;
@@ -569,7 +582,7 @@ function renderCart(){
     <th>Code</th><th>Course</th><th>Pages</th><th>Side</th><th>Bind</th><th>Qty</th><th>Sheets</th><th>Amount</th><th></th>
   </tr></thead><tbody>`;
   cart.forEach(item=>{
-    const c = lineCost(item.pages, item.sides, item.binding, item.qty);
+    const c = lineCost(item.pages, item.sides, item.binding, item.qty, item.price);
     rows += `<tr>
       <td>${item.custom ? 'NEW' : item.code}</td>
       <td>${escapeHtml(item.course)}${item.custom ? ' <span style="color:var(--stamp);font-size:10.5px;font-weight:700;">(' + escapeHtml(item.docType) + ' - send PDF)</span>' : ''}</td>
@@ -620,7 +633,7 @@ function buildWhatsAppText(orderId, name, contact, t){
   lines.push('');
   const customItems = [];
   cart.forEach((item, i)=>{
-    const c = lineCost(item.pages, item.sides, item.binding, item.qty);
+    const c = lineCost(item.pages, item.sides, item.binding, item.qty, item.price);
     const flag = item.custom ? ('  [' + item.docType.toUpperCase() + ' - NOT IN CATALOGUE]') : '';
     lines.push((i+1) + '. [' + item.code + '] ' + item.course + ' | ' + item.pages + 'pg | ' + item.sides + 'side | ' + BIND_LABEL[item.binding] + ' | Qty:' + item.qty + ' | Rs ' + c.total + flag);
     if(item.custom) customItems.push(item.docType + ': ' + item.course);
@@ -661,7 +674,7 @@ async function submitOrder(){
   btn.disabled = true; btn.textContent = 'Opening WhatsApp...';
   const t = computeCartTotals();
   const items = cart.map(item=>{
-    const c = lineCost(item.pages, item.sides, item.binding, item.qty);
+    const c = lineCost(item.pages, item.sides, item.binding, item.qty, item.price);
     // If a bulk discount applies, apply the same 10% reduction to THIS item's
     // service fee too (not just the cart-level total) - otherwise each
     // line item stored in the sheet would still show the full undiscounted

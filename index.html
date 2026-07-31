@@ -862,9 +862,14 @@ function getDeliveryDetail(){
 function sheetsFor(pages, sides){ return sides === '2' ? Math.ceil(pages/2) : pages; }
 function lineCost(pages, sides, binding, qty){
   const sheets = sheetsFor(pages, sides);
-  const printCost = sheets * PAPER_RATE * qty;
-  const bindCost = BIND_PRICE[binding] * qty;
-  const serviceFee = SERVICE_FEE * qty;
+  // The RATE (PAPER_RATE/BIND_PRICE/SERVICE_FEE) is used exactly as
+  // configured, decimals and all - only the CALCULATED price is rounded up
+  // to a whole rupee here, so e.g. Rs 1.09/sheet stays 1.09 in the Pricing
+  // sheet and the legend, but a 101-sheet book (which would otherwise come
+  // to Rs 110.09) shows and charges as Rs 111.
+  const printCost = Math.ceil(sheets * PAPER_RATE * qty);
+  const bindCost = Math.ceil(BIND_PRICE[binding] * qty);
+  const serviceFee = Math.ceil(SERVICE_FEE * qty);
   return { sheets, printCost, bindCost, serviceFee, total: printCost + bindCost + serviceFee };
 }
 
@@ -1396,18 +1401,18 @@ async function loadPricing(){
   try{
     const res = await fetch(SHEET_WEBAPP_URL + '?action=pricing');
     const data = await res.json();
-    // Math.ceil here, not just at display time: every screen on the site
-    // (price legend, course-card preview, cart, printed bill, WhatsApp
-    // message) computes its numbers FROM these rates. Rounding the rate up
-    // to a whole rupee right here means every downstream calculation is
-    // automatically a whole number too - no decimal can ever slip through,
-    // even if a rate is ever typed in as something like 0.9 or 7.5.
-    if (data && typeof data.paper === 'number') PAPER_RATE = Math.ceil(data.paper);
-    if (data && typeof data.service === 'number') SERVICE_FEE = Math.ceil(data.service);
-    if (data && typeof data.spiral === 'number') BIND_PRICE.spiral = Math.ceil(data.spiral);
-    if (data && typeof data.tape === 'number') BIND_PRICE.tape = Math.ceil(data.tape);
-    if (data && typeof data.book_hard === 'number') BIND_PRICE.book_hard = Math.ceil(data.book_hard);
-    if (data && typeof data.book_soft === 'number') BIND_PRICE.book_soft = Math.ceil(data.book_soft);
+    // The rate itself is kept EXACTLY as typed in the Pricing sheet (e.g.
+    // 1.09/sheet stays 1.09) - it is never rounded. Only the CALCULATED
+    // price of a book (rate x sheets x qty, in lineCost() below) gets
+    // rounded up to a whole rupee. That keeps your per-sheet cost input
+    // precise while what a student actually sees/pays is always a clean
+    // whole number.
+    if (data && typeof data.paper === 'number') PAPER_RATE = data.paper;
+    if (data && typeof data.service === 'number') SERVICE_FEE = data.service;
+    if (data && typeof data.spiral === 'number') BIND_PRICE.spiral = data.spiral;
+    if (data && typeof data.tape === 'number') BIND_PRICE.tape = data.tape;
+    if (data && typeof data.book_hard === 'number') BIND_PRICE.book_hard = data.book_hard;
+    if (data && typeof data.book_soft === 'number') BIND_PRICE.book_soft = data.book_soft;
   }catch(err){ /* keep defaults */ }
   refreshPriceDisplays();
 }

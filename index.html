@@ -1396,12 +1396,18 @@ async function loadPricing(){
   try{
     const res = await fetch(SHEET_WEBAPP_URL + '?action=pricing');
     const data = await res.json();
-    if (data && typeof data.paper === 'number') PAPER_RATE = data.paper;
-    if (data && typeof data.service === 'number') SERVICE_FEE = data.service;
-    if (data && typeof data.spiral === 'number') BIND_PRICE.spiral = data.spiral;
-    if (data && typeof data.tape === 'number') BIND_PRICE.tape = data.tape;
-    if (data && typeof data.book_hard === 'number') BIND_PRICE.book_hard = data.book_hard;
-    if (data && typeof data.book_soft === 'number') BIND_PRICE.book_soft = data.book_soft;
+    // Math.ceil here, not just at display time: every screen on the site
+    // (price legend, course-card preview, cart, printed bill, WhatsApp
+    // message) computes its numbers FROM these rates. Rounding the rate up
+    // to a whole rupee right here means every downstream calculation is
+    // automatically a whole number too - no decimal can ever slip through,
+    // even if a rate is ever typed in as something like 0.9 or 7.5.
+    if (data && typeof data.paper === 'number') PAPER_RATE = Math.ceil(data.paper);
+    if (data && typeof data.service === 'number') SERVICE_FEE = Math.ceil(data.service);
+    if (data && typeof data.spiral === 'number') BIND_PRICE.spiral = Math.ceil(data.spiral);
+    if (data && typeof data.tape === 'number') BIND_PRICE.tape = Math.ceil(data.tape);
+    if (data && typeof data.book_hard === 'number') BIND_PRICE.book_hard = Math.ceil(data.book_hard);
+    if (data && typeof data.book_soft === 'number') BIND_PRICE.book_soft = Math.ceil(data.book_soft);
   }catch(err){ /* keep defaults */ }
   refreshPriceDisplays();
 }
